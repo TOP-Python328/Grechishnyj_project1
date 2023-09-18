@@ -53,7 +53,7 @@ def _command():
     while command:
         for option in options.values():
             for value in option.values():
-                if command == 'help' or command == 'h':
+                if command in ('help', 'h', 'помощь', 'п'):
                     return _help()
         else:
             command = input('Введите команду: ')
