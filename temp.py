@@ -2,6 +2,8 @@ from configparser import ConfigParser
 from pathlib import Path
 from sys import path
 
+import menu
+
 # Функции для работы с файлом игроков players.ini
 def create_player(player_name: str):
     """Функция добавления нового игрока в файл players.ini"""
@@ -81,10 +83,19 @@ def create_wins(size):
     
     return wins_combinations 
     
+
     
+   
+ 
 # ==================================================================
 # ПРОЦЕСС ИГРЫ
 # ==================================================================
+
+# ==================================================================
+# НАЧАЛО - ГЛАВНОЕ МЕНЮ
+# ==================================================================
+
+menu._command()
 
 # # Получаем игоков
 # players = read_players() 
