@@ -22,19 +22,38 @@ def read_players() -> dict:
 
     players = ConfigParser()
     players.read('players.ini')
-    return dict(players)
+    return players
 
      
 
-# def update_player(player_name):
-    # """docstring"""
+def update_player(player_name, key, value):
+    """Функция обновления данных в файле players.ini"""
     
-    # player = ConfigParser()
+    players = read_players()
+    players.set(player_name, key, value)
+    
+    file = Path(path[0]) / 'players.ini'
+    with open(file, 'w', encoding='utf-8') as fileout:
+        players.write(fileout)
+        
+        
+# ==================================================================
+# ПРОЦЕСС ИГРЫ
+# ==================================================================
 
-    # player.set(player_name, 'wins', '1')
-    # player.set(player_name, 'draws', '2')
-    # player.set(player_name, 'loses', '3')
-    
-    # file = Path(path[0]) / 'settings.ini'
-    # with open(file, 'w', encoding='utf-8') as fileout:
-        # player.write(fileout)     
+# получаем игоков
+
+players = read_players() 
+
+# Имя игрока 1
+player1_name = input()
+player2_name = input()
+
+if player1_name not in players:
+    create_player(player1_name)
+
+if player2_name not in players:
+    create_player(player2_name)
+
+print(*read_players())
+
