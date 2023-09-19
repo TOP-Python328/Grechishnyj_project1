@@ -1,4 +1,3 @@
-# Функция шаблона игрового поля
 def _template(size: int) -> str:
     """Функция генерирует игровое поле для отображения в консоли"""
     field_template = ''
@@ -12,7 +11,7 @@ def _template(size: int) -> str:
         field_template += '\n' + '————'*(size) + '\n'
     return field_template
 
-# Функция построения выигрышных комбинаций
+
 def _wins(size: int) -> list[set[int]]:
     """Функция возвращает список сетов выигрышных комбинаций в зависимости от размера игрового поля."""
     
@@ -45,14 +44,14 @@ def _wins(size: int) -> list[set[int]]:
     wins_combinations.append(set(diagonal_back))
     return wins_combinations 
 
-# Функция проверяет корректность ввода и добавляет значение хода если проверка пройдена
+
 def _addstep(step, steps, size) -> list[int]:
     """Функция проверяет корректность ввода и добавляет значение хода если проверка пройдена"""
     if step not in steps and 0 < step <= size**2: 
         steps.append(step)
         return steps
         
-# Функция проверки наличия выигрышной комбинации в списке шагов
+
 def _wincheck(steps: list[int], wins: list[tuple]) -> bool:
     """Функция проверки наличия выигрышной комбинации в списке шагов"""
     steps1 = set(steps[::2])
@@ -67,5 +66,3 @@ def _wincheck(steps: list[int], wins: list[tuple]) -> bool:
     else:
         print('Игра продолжается...')
         return False
-
-    
