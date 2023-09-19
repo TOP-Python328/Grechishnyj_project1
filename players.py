@@ -3,7 +3,7 @@ from pathlib import Path
 from sys import path
 
 # Функции для работы с файлом игроков players.ini
-def create_player(player_name: str):
+def _create(player_name: str):
     """Функция записи нового игрока в файл players.ini"""
     player = ConfigParser()
     player.add_section(player_name)
@@ -14,7 +14,7 @@ def create_player(player_name: str):
     with open(file, 'a', encoding='utf-8') as fileout:
         player.write(fileout)
 
-def read_players() -> ConfigParser:
+def _read() -> ConfigParser:
     """Функция чтения файла players.ini"""
     players = ConfigParser()
     players.read('players.ini')
@@ -28,7 +28,7 @@ def read_players() -> ConfigParser:
 # >>> print(dict(players))
 # {'DEFAULT': <Section: DEFAULT>, 'Olga': <Section: Olga>, 'Pavel': <Section: Pavel>, 'Ivan': <Section: Ivan>}
 
-def update_player(player_name, key, value):
+def _update(player_name: str, key: str, value: str):
     """Функция обновления данных в файле players.ini"""
     players = read_players()
     players.set(player_name, key, value)
