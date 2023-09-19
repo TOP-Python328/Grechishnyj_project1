@@ -65,10 +65,35 @@ def create_wins(size: int=3) -> list[set[int]]:
     # {10, 4, 13, 7}
 # ]
 
+# Функция заполнения списка ходов
+# Проверяет корректность ввода и добавляет значение если проверка пройдена
+def addstep(steps: list[int], size: int) -> list[int]:
+    """Функция проверяет корректность ввода и добавляет значение хода если проверка пройдена"""
+    while True:
+        try:
+            step = int(input('Введите число: '))
+            if step not in steps and 0 < step < size + 1: 
+                steps.append(step) 
+                return steps
+            else:
+                print('Не веррный ввод')
+        except:
+            print('Вы ввели не число')
+            continue
 
+# Функция проверки наличия выигрышной комбинации в списке шагов
+wins_comb = create_wins(size=3)
+def wincheck(steps: list[int]) -> bool:
+    """Функция проверки наличия выигрышной комбинации в списке шагов"""
+    steps1 = set(steps[::2])
+    steps2 = set(steps[1::2])
+    for comb in wins_comb:
+        if comb == steps1:
+            return 'Победил игрок 1'
+        if comb == steps2:
+            return 'Победил игрок 2'
     
 
-    
    
  
 # ==================================================================
