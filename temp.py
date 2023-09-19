@@ -2,6 +2,27 @@ import menu
 import players
 import utils
 
+# ИГРОКИ
+PLAYERS = players._read() 
+name_01 = input('Введите имя игрока 1:')
+name_02 = input('Введите имя игрока 2:')
+check_names = False
+
+if name_01 not in PLAYERS:
+    players._create(name_01)
+    check_names = True
+if name_02 not in PLAYERS:
+    players._create(name_02)
+    check_names = True
+if check_names:
+    PLAYERS = players._read() 
+    
+PLAYER_01 = PLAYERS[name_01]
+PLAYER_02 = PLAYERS[name_02]
+
+print(PLAYER_01, PLAYER_02)
+
+# ПРОЦЕСС ИГРЫ
 SIZE = 3 
 WIN = utils._wincheck
 WINS = utils._wins(SIZE) 
@@ -17,7 +38,15 @@ while True:
         ADDSTEP(STEP, STEPS, SIZE)
         TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
         print(STROUT.format(*TURNS))
-        if WIN(STEPS, WINS):
+        # ПОБЕДА
+        end_game = WIN(STEPS, WINS)
+        if end_game:
+            if len(STEPS) % 2:
+                players._update(name_01, 'wins', str(int(PLAYER_01['wins']) + 1))
+                players._update(name_02, 'loses', str(int(PLAYER_02['loses']) + 1))
+            else:
+                players._update(name_01, 'loses', str(int(PLAYER_01['loses']) + 1))
+                players._update(name_02, 'wins', str(int(PLAYER_02['wins']) + 1))
             break       
     except:
         break
@@ -82,20 +111,11 @@ while True:
 
 # ИГРОКИ
 
-    # # Получаем игоков
-    # players = read_players() 
-
+    # # Получаем всех игоков
     # # Получаем имена игроков для игры
-    # player1_name = input()
-    # player2_name = input()
-
     # # Проверяем наличие игроков в списке всех игроков
     # # Если если кого-то нет, то создаем с новым именем
-    # if player1_name not in players:
-        # create_player(player1_name)
-
-    # if player2_name not in players:
-        # create_player(player2_name)
+   
     
 # ИГРА
 

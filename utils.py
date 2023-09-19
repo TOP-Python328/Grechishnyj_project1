@@ -58,14 +58,14 @@ def _wincheck(steps: list[int], wins: list[tuple]) -> bool:
     steps1 = set(steps[::2])
     steps2 = set(steps[1::2])
     for win in wins:
-        if win == steps1:
+        if win <= steps1:
             print('Победил игрок 1')
             return True
-        if win == steps2:
+        if win <= steps2:
             print('Победил игрок 2')
             return True
-        else:
-            print('Игра продолжается...')
-            return False
+    else:
+        print('Игра продолжается...')
+        return False
 
     

@@ -13,6 +13,7 @@ def _create(player_name: str):
     file = Path(path[0]) / 'players.ini'
     with open(file, 'a', encoding='utf-8') as fileout:
         player.write(fileout)
+    
 
 def _read() -> ConfigParser:
     """Функция чтения файла players.ini"""
@@ -30,7 +31,7 @@ def _read() -> ConfigParser:
 
 def _update(player_name: str, key: str, value: str):
     """Функция обновления данных в файле players.ini"""
-    players = read_players()
+    players = _read()
     players.set(player_name, key, value)
     file = Path(path[0]) / 'players.ini'
     with open(file, 'w', encoding='utf-8') as fileout:
