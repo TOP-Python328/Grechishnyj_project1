@@ -31,7 +31,7 @@ PLAYER_02 = PLAYERS[name_02]
 print(PLAYER_01, PLAYER_02)
 
 # ПРОЦЕСС ИГРЫ
-SIZE = 3 
+SIZE = menu._dim() 
 WIN = utils._wincheck
 WINS = utils._wins(SIZE) 
 ADDSTEP = utils._addstep
