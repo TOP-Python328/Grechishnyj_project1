@@ -42,32 +42,29 @@ def _message(text: str) -> str:
     text_main += (empt_line + bord_line)
     print(text_main)
 
-# переработать
+       
 def _table(dt_table: list[tuple]) -> str:
-    """doc"""
+    """Функция печатает в консоли таблицу в рамке"""
+    
     w_terminal = get_terminal_size().columns
     width = [
         max(len(str(obj)) for obj in column)
         for column in zip(*dt_table)
     ]
-    width_line = sum(width)
-
-    str_table = ''
-    str_table += f'#{"=" * width_line}#\n'
-    str_table += f'#{" " * width_line}#\n'     
-    for i in range(len(dt_table)):
-        str_table += ''.join(f'#    {i+1}. {dt_table[i][0]:<{width[0]}}'
-            f' | {dt_table[i][1]:<{width[1]}}' 
-            f' | {dt_table[i][2]:^{width[2]}}'
-            f' | {dt_table[i][3]:<{width[3]}}'
-            f' | {dt_table[i][4]:^{width[4]}}'
-            f' #\n')
-    str_table += f'#{" " * width_line}#\n' 
-    str_table += f'#{"=" * width_line}#'
+    rows = list(tuple(zip(width, tr)) for tr in dt_table)
     
-    table = str_table.split('\n')
-    for li in table:
-        char = li[-2]
-        lilen = w_terminal - len(li)
-        li = li[:-1] + char * lilen + '#'
-        print(li, end='')
+    border = f'#{"=" * (w_terminal - 2)}#'
+    line = f'#{" " * (w_terminal - 2)}#'
+    table = ''
+    table += border + line
+    for row in rows:
+        start_str = f'#    '
+        tr = ''
+        end_str = f'#'
+        for cell in row:
+            tr += ''.join(f' {cell[1]:<{cell[0]}}  |')
+        table += start_str +  f'{tr[:-1]} '
+        table += f'{" " * (w_terminal - len(tr) - len(start_str) - len(end_str))}{end_str}'
+    table += line + border  
+    print(table)
+

@@ -41,6 +41,8 @@ STEPS = []
 
 while True:
     CMD = input('КОМАНДА МЕНЮ: > ')
+    if CMD == 'quit':
+        break
     while True:
         STEP = int(input('Введите число: > '))
         try:
@@ -61,9 +63,8 @@ while True:
             break
             # print('Вы ввели не число')
             # continue
-    CMD = input('КОМАНДА МЕНЮ: > ')
-    if CMD == 'quit':
-        break
+
+    
 xprint._message('ИГРА ЗАКОНЧЕНА!')
 
 # 14:37:37 > python -i temp.py
