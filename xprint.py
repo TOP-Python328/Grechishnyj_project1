@@ -40,9 +40,9 @@ def _message(text: str) -> str:
         )
             
     text_main += (empt_line + bord_line)
-    print(text_main)
+    print(text_main, end="")
 
-       
+      
 def _table(dt_table: list[tuple]) -> str:
     """Функция печатает в консоли таблицу в рамке"""
     

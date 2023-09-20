@@ -7,6 +7,7 @@ import xprint
 TITLE = 'Крестики-Нолики'
 HELP = menu.options
 xprint._message(TITLE)
+print('version 0.0.2')
 xprint._table(HELP)
 
 # ИГРОКИ
@@ -38,11 +39,11 @@ STROUT = utils._template(SIZE)
 TURNS = [' ' for _ in range(SIZE**2)]
 TOKENS = ('O', 'X')
 STEPS = []
+CMD = input('КОМАНДА МЕНЮ: > ')
 
 while True:
-    CMD = input('КОМАНДА МЕНЮ: > ')
     if CMD == 'quit':
-        break
+        break 
     while True:
         STEP = int(input('Введите число: > '))
         try:
@@ -58,13 +59,12 @@ while True:
                 else:
                     players._update(name_01, 'loses', str(int(PLAYER_01['loses']) + 1))
                     players._update(name_02, 'wins', str(int(PLAYER_02['wins']) + 1))
-                break       
+                break     
         except:
             break
             # print('Вы ввели не число')
             # continue
-
-    
+    CMD = input('КОМАНДА МЕНЮ: > ')
 xprint._message('ИГРА ЗАКОНЧЕНА!')
 
 # 14:37:37 > python -i temp.py
