@@ -1,17 +1,3 @@
-def _template(size: int) -> str:
-    """Функция генерирует игровое поле для отображения в консоли"""
-    field_template = ''
-    line = 0
-    for _ in range(size):
-        field_template += '|'.join(' {} ' for _ in range(size))
-        if line == size - 1:
-            field_template += '\n'
-            break
-        line += 1
-        field_template += '\n' + '————'*(size) + '\n'
-    return field_template
-
-
 def _wins(size: int) -> list[set[int]]:
     """Функция возвращает список сетов выигрышных комбинаций в зависимости от размера игрового поля."""
     
