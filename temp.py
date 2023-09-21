@@ -10,86 +10,84 @@ xprint._message(TITLE)
 print('version 0.0.2')
 xprint._table(HELP)
 
-# ИГРОКИ
-PLAYERS = players._read() 
-
+# ИГРОК
+db_players = players._read() 
 name_01 = input('Введите имя игрока 1: > ')
 print()
-if name_01 not in PLAYERS:
+# ДОБАВЛЯЕМ ИГРОКА ЕСЛИ НЕТ В БАЗЕ
+if name_01 not in db_players:
     players._create(name_01)
 
+# РЕЖИМ ИГРЫ
 xprint._table([('ОДИНОЧНАЯ ИГРА', 1), ('ИГРА С СОПЕРНИКОМ', 2)])
 game_mod = input('Выберете режим игры: > ')
 print()
+# ОДИН ИГРОК
 if game_mod == '1':
+    # УРОВЕНЬ СЛОЖНОСТИ
     xprint._table([('ПРОСТО', 1), ('СЛОЖНО', 2)])
     difficulty = input('Выберете уровень сложности: > ')
     print()
     if difficulty == '1':
-        name_02 = 'BOTEASY'
+        name_02 = 'EASYBOT'
     else:
-        name_02 = 'BOTHARD'
-else:
+        name_02 = 'HARDBOT'
+# ДВА ИГРОКА
+if game_mod == '2':
     name_02 = input('Введите имя игрока 2: > ')
     print()
-
-if name_02 not in PLAYERS:
+# ДОБАВЛЯЕМ ВТОРОГО ИГРОКА ЕСЛИ НЕТ В БАЗЕ
+if name_02 not in db_players:
     players._create(name_02)
-
-PLAYERS = players._read() 
+db_players = players._read() 
 names = [name_01, name_02]
 
+# ВЫБОР ТОКЕНА
 xprint._table([('Играть X', 1), ('Играть O', 2)]) 
-player_01_token = input('Выберете за кого играть: > ')   
+player_01_token = input(f'{name_01} выберете чем будете играть: > ')   
 if player_01_token == '2':
     names.reverse()
 
-print(names)
 
-# ПРОЦЕСС ИГРЫ
 SIZE = 3
-isWIN = utils._wincheck
-isDRAW = utils._drawcheck
-ADDSTEP = utils._addstep
-TOKENS = ('O', 'X')
 CMD = input('КОМАНДА МЕНЮ: > ')
 
+#ВКЛ/ВЫКЛ
 while True:
     if CMD == 'dim':
         SIZE = menu._dim()
+    # ПРОЦЕСС ИГРЫ
     if CMD == 'new':
+        TOKENS = ('O', 'X')
         TURNS = [' ' for _ in range(SIZE**2)]
         STEPS = []
         WINS = utils._wins(SIZE)
         STROUT = xprint._template(SIZE)
-        print(STROUT.format(*TURNS))
+        print(f'\n{STROUT.format(*TURNS)}', end='')
         while True:
-            STEP = int(input(f'Ход {names[len(STEPS) % 2]}: > '))
             try:
                 # ХОД
-                ADDSTEP(STEP, STEPS, SIZE)
+                STEP = int(input(f'Ход {names[len(STEPS) % 2]}... '))    
+                utils._addstep(STEP, STEPS, SIZE)
                 TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
                 # ВЫВОД ПОЛЯ
-                print(STROUT.format(*TURNS))
-                
+                print(f'\n{STROUT.format(*TURNS)}', end='') 
                 # НИЧЬЯ
-                if isDRAW(STEPS, WINS):
+                if utils.isDraw(STEPS, WINS):
                     # ОБНОВЛЕНИЕ ДАННЫХ
-                    players._update(name_01, 'draws', str(int(PLAYERS[name_01]['draws']) + 1))
-                    players._update(name_02, 'draws', str(int(PLAYERS[name_02]['draws']) + 1))
+                    players._update(name_01, 'draws', str(int(db_players[name_01]['draws']) + 1))
+                    players._update(name_02, 'draws', str(int(db_players[name_02]['draws']) + 1))
                     xprint._message(f'The game ended in a draw...')
-                    break
-                
+                    break            
                 # ПОБЕДА
-                if isWIN(STEPS, WINS):
+                if utils.isWin(STEPS, WINS):
                     # ОБНОВЛЕНИЕ ДАННЫХ
                     winner = names[len(STEPS) % 2 - 1]
                     loser = names[len(STEPS) % 2]
-                    players._update(winner, 'wins', str(int(PLAYERS[winner]['wins']) + 1))
-                    players._update(loser, 'loses', str(int(PLAYERS[loser]['loses']) + 1))
+                    players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
+                    players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
                     xprint._message(f'Congratulations winner - {winner} !!!')
-                    break
-                    
+                    break  
             except:
                 break
                 # print('Вы ввели не число')
@@ -98,6 +96,39 @@ while True:
         xprint._message('СМЕНИТЬ ИГРОКА')
     if CMD == 'table':
         xprint._message('ТАБЛИЦА РЕЗУЛЬТАТОВ')
+        db_players = players._read()
+        table_line = tuple('—' * 10 for _ in range(4))
+        table_stat = [('PLAYER', 'WINS', 'DRAWS', 'LOSES'), table_line]
+        for name, stat in db_players.items():
+            if name in ('DEFAULT', 'HARDBOT','EASYBOT'):
+                continue
+            table_stat.append((name, *(value for value in stat.values()))) 
+        xprint._table(table_stat) 
+        # КОМАНДА МЕНЮ: > table
+        #===========================================================================#
+        #                                                                           #
+        #                            ТАБЛИЦА РЕЗУЛЬТАТОВ                            #
+        #                                                                           #
+        #===========================================================================#
+        #===========================================================================#
+        #                                                                           #
+        #     PLAYER      | WINS        | DRAWS       | LOSES                       #
+        #     ——————————  | ——————————  | ——————————  | ——————————                  #
+        #     USER        | 0           | 1           | 1                           #
+        #     ADMIN       | 2           | 1           | 0                           #
+        #     Pavel       | 0           | 0           | 1                           #
+        #     Oleg        | 0           | 0           | 0                           #
+        #     QWERTY      | 3           | 1           | 0                           #
+        #     TREWQ       | 0           | 1           | 0                           #
+        #     ASDFG       | 0           | 0           | 1                           #
+        #     ZXCVB       | 1           | 1           | 0                           #
+        #     MNBVC       | 0           | 1           | 1                           #
+        #     ZENIT       | 1           | 0           | 0                           #
+        #     QWERT       | 1           | 0           | 1                           #
+        #     SDFG        | 0           | 0           | 0                           #
+        #                                                                           #
+        #===========================================================================#        
+
     if CMD == 'quit':
         break
     

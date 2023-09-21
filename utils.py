@@ -38,7 +38,7 @@ def _addstep(step, steps, size) -> list[int]:
         return steps
         
 
-def _wincheck(steps: list[int], wins: list[tuple]) -> bool:
+def isWin(steps: list[int], wins: list[tuple]) -> bool:
     """Функция проверки наличия выигрышной комбинации в списке шагов"""
     steps1 = set(steps[::2])
     steps2 = set(steps[1::2])
@@ -48,11 +48,10 @@ def _wincheck(steps: list[int], wins: list[tuple]) -> bool:
         if win <= steps2:
             return True
     else:
-        print('Игра продолжается...')
         return False
         
         
-def _drawcheck(steps: list[int], wins: list[set[int]]) -> bool:
+def isDraw(steps: list[int], wins: list[set[int]]) -> bool:
     """Функция исключает выигрышную комбинацию в списке выигрышных комбинаций"""
     steps1 = set(steps[::2])
     steps2 = set(steps[1::2])
@@ -64,3 +63,4 @@ def _drawcheck(steps: list[int], wins: list[set[int]]) -> bool:
            
     if len(wins) == 0:
         return True
+        
