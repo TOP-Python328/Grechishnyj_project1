@@ -12,58 +12,89 @@ xprint._table(HELP)
 
 # ИГРОКИ
 PLAYERS = players._read() 
-name_01 = input('Введите имя игрока 1: > ')
-name_02 = input('Введите имя игрока 2: > ')
-check_names = False
 
+name_01 = input('Введите имя игрока 1: > ')
+print()
 if name_01 not in PLAYERS:
     players._create(name_01)
-    check_names = True
+
+xprint._table([('ОДИНОЧНАЯ ИГРА', 1), ('ИГРА С СОПЕРНИКОМ', 2)])
+game_mod = input('Выберете режим игры: > ')
+print()
+if game_mod == '1':
+    xprint._table([('ПРОСТО', 1), ('СЛОЖНО', 2)])
+    difficulty = input('Выберете уровень сложности: > ')
+    print()
+    if difficulty == '1':
+        name_02 = 'BOTEASY'
+    else:
+        name_02 = 'BOTHARD'
+else:
+    name_02 = input('Введите имя игрока 2: > ')
+    print()
+
 if name_02 not in PLAYERS:
     players._create(name_02)
-    check_names = True
-if check_names:
-    PLAYERS = players._read() 
-    
-PLAYER_01 = PLAYERS[name_01]
-PLAYER_02 = PLAYERS[name_02]
 
-print(PLAYER_01, PLAYER_02)
+PLAYERS = players._read() 
+names = [name_01, name_02]
+
+xprint._table([('Играть X', 1), ('Играть O', 0)]) 
+player_01_token = input('Выберете за кого играть: > ')   
+if player_01_token == '0':
+    names.reverse()
+
+print(names)
 
 # ПРОЦЕСС ИГРЫ
-SIZE = menu._dim() 
+SIZE = 3
 WIN = utils._wincheck
-WINS = utils._wins(SIZE) 
 ADDSTEP = utils._addstep
-STROUT = utils._template(SIZE)
-TURNS = [' ' for _ in range(SIZE**2)]
 TOKENS = ('O', 'X')
-STEPS = []
 CMD = input('КОМАНДА МЕНЮ: > ')
 
 while True:
+    if CMD == 'dim':
+        SIZE = menu._dim()
+    if CMD == 'new':
+        TURNS = [' ' for _ in range(SIZE**2)]
+        STEPS = []
+        WINS = utils._wins(SIZE)
+        STROUT = utils._template(SIZE)
+        print(STROUT.format(*TURNS))
+        while True:
+            STEP = int(input(f'Ход {names[len(STEPS) % 2]}: > '))
+            try:
+                # ХОД
+                ADDSTEP(STEP, STEPS, SIZE)
+                TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
+                # ВЫВОД ПОЛЯ
+                print(STROUT.format(*TURNS))
+                # НИЧЬЯ
+                isDraw = utils._drawcheck(STEPS, WINS)
+                if isDraw:
+                    # ОБНОВЛЕНИЕ ДАННЫХ
+                    players._update(name_01, 'draws', str(int(PLAYERS[name_01]['draws']) + 1))
+                    players._update(name_02, 'draws', str(int(PLAYERS[name_01]['draws']) + 1))
+                    xprint._message(f'The game ended in a draw...')
+                    break
+                # ПОБЕДА
+                isWin = WIN(STEPS, WINS)
+                if isWin:
+                    winner = names[len(STEPS) % 2 - 1]
+                    loser = names[len(STEPS) % 2]
+                    xprint._message(f'Congratulations winner - {winner} !!!')
+                    # ОБНОВЛЕНИЕ ДАННЫХ
+                    players._update(winner, 'wins', str(int(PLAYERS[winner]['wins']) + 1))
+                    players._update(loser, 'loses', str(int(PLAYERS[loser]['loses']) + 1))
+                    break     
+            except:
+                break
+                # print('Вы ввели не число')
+                # continue
     if CMD == 'quit':
-        break 
-    while True:
-        STEP = int(input('Введите число: > '))
-        try:
-            ADDSTEP(STEP, STEPS, SIZE)
-            TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
-            print(STROUT.format(*TURNS))
-            # ПОБЕДА
-            end_game = WIN(STEPS, WINS)
-            if end_game:
-                if len(STEPS) % 2:
-                    players._update(name_01, 'wins', str(int(PLAYER_01['wins']) + 1))
-                    players._update(name_02, 'loses', str(int(PLAYER_02['loses']) + 1))
-                else:
-                    players._update(name_01, 'loses', str(int(PLAYER_01['loses']) + 1))
-                    players._update(name_02, 'wins', str(int(PLAYER_02['wins']) + 1))
-                break     
-        except:
-            break
-            # print('Вы ввели не число')
-            # continue
+        break
+    
     CMD = input('КОМАНДА МЕНЮ: > ')
 xprint._message('ИГРА ЗАКОНЧЕНА!')
 
