@@ -1,0 +1,37 @@
+USER,EASYBOT!1!X, , , , , , , , 
+USER,EASYBOT!1,2!X,O, , , , , , , 
+USER,EASYBOT!1,2,3!X,O,X, , , , , , 
+USER,EASYBOT!1,2,3,4!X,O,X,O, , , , , 
+USER,EASYBOT!1,2,3,4,5!X,O,X,O,X, , , , 
+USER,EASYBOT!1,2,3,4,5,6!X,O,X,O,X,O, , , 
+USER,EASYBOT!1,2,3,4,5,6,9!X,O,X,O,X,O, , ,X
+player_01,player_02!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_03!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_04!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_05!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_08!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_06!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_07!1,2,4,3,9!X,0,0,X,,,,,X
+USER,EASYBOT!1,2,3,4,5,6,9!X,O,X,O,X,O, , ,X
+player_01,player_02!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_03!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_04!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_05!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_08!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_06!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_07!1,2,4,3,9!X,0,0,X,,,,,X
+USER,EASYBOT!1,2,3,4,5,6,9!X,O,X,O,X,O, , ,X
+player_01,player_02!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_03!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_04!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_05!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_08!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_06!1,2,4,3,9!X,0,0,X,,,,,X
+player_01,player_07!1,2,4,3,9!X,0,0,X,,,,,XASDFG,EASYBOT!1!X, , , , , , , , 
+ASDFG,EASYBOT!1,5!X, , , ,O, , , , 
+ASDFG,EASYBOT!1,5,6!X, , , ,O,X, , , 
+ASDFG,EASYBOT!1,5,6,4!X, , ,O,O,X, , , 
+ASDFG,EASYBOT!1,5,6,4,8!X, , ,O,O,X, ,X, 
+ASDFG,EASYBOT!1,5,6,4,8,3!X, ,O,O,O,X, ,X, 
+ASDFG,EASYBOT!1,5,6,4,8,3,7!X, ,O,O,O,X,X,X, 
+ASDFG,EASYBOT!1,5,6,4,8,3,7,9!X, ,O,O,O,X,X,X,O

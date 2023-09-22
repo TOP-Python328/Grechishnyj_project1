@@ -49,9 +49,7 @@ def isWin(steps: list[int], wins: list[set[int, ...]]) -> bool:
     crosses = set(steps[::2])
     zeros = set(steps[1::2])
     for comb in wins:
-        if comb <= crosses:
-            return True
-        if comb <= zeros:
+        if comb <= crosses or comb <= zeros:
             return True
     else:
         return False

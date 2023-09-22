@@ -2,6 +2,7 @@ import menu
 import players
 import utils
 import xprint
+import saves
 
 # ПЕРВЫЙ ЗАПУСК
 TITLE = 'Крестики-Нолики'
@@ -11,13 +12,16 @@ print('version 0.0.2')
 xprint._table(HELP)
 
 # ИГРОК
+# ==========================
+# читаем проверяем добавляем
 db_players = players._read() 
 name_01 = input('Введите имя игрока 1: > ')
 print()
 # ДОБАВЛЯЕМ ИГРОКА ЕСЛИ НЕТ В БАЗЕ
 if name_01 not in db_players:
     players._create(name_01)
-
+# читаем проверяем добавляем
+# ==========================
 # РЕЖИМ ИГРЫ
 xprint._table([('ОДИНОЧНАЯ ИГРА', 1), ('ИГРА С СОПЕРНИКОМ', 2)])
 game_mod = input('Выберете режим игры: > ')
@@ -33,6 +37,8 @@ if game_mod == '1':
     else:
         name_02 = 'HARDBOT'
 # ДВА ИГРОКА
+# ==========================
+# читаем проверяем добавляем
 if game_mod == '2':
     name_02 = input('Введите имя игрока 2: > ')
     print()
@@ -41,6 +47,8 @@ if name_02 not in db_players:
     players._create(name_02)
 db_players = players._read() 
 names = [name_01, name_02]
+# читаем проверяем добавляем
+# ==========================
 
 # ВЫБОР ТОКЕНА
 xprint._table([('Играть X', 1), ('Играть O', 2)]) 
@@ -58,18 +66,28 @@ while True:
         SIZE = menu._dim()
     # ПРОЦЕСС ИГРЫ
     if CMD == 'new':
+
         TOKENS = ('O', 'X')
         TURNS = [' ' for _ in range(SIZE**2)]
         STEPS = []
         WINS = utils._wins(SIZE)
         STROUT = xprint._template(SIZE)
         print(f'\n{STROUT.format(*TURNS)}', end='')
+        
+        SAVE = {tuple(names):(STEPS, TURNS)}
+        print(SAVE)
+        
         while True:
             try:
                 # ХОД
                 STEP = int(input(f'Ход {names[len(STEPS) % 2]}... '))  
                 utils._addstep(STEP, STEPS, SIZE)
                 TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
+                
+                #SAVE[names] = (STEPS, TURNS)
+                print(SAVE)
+                STR_SAVE = f'{saves._parse_ts(SAVE)}\n'
+                saves._write_save(STR_SAVE)
                 # ВЫВОД ПОЛЯ
                 print(f'\n{STROUT.format(*TURNS)}', end='') 
                 # НИЧЬЯ
@@ -93,6 +111,8 @@ while True:
                 # print('Вы ввели не число')
                 # continue
     if CMD == 'player':
+        # ==========================
+        # читаем проверяем добавляем
         xprint._message('СМЕНИТЬ ИГРОКА')
         name_01 = input('Введите имя игрока 1: > ')
         print()
@@ -101,7 +121,8 @@ while True:
             # players._create(name_01)
         # db_players = players._read() 
         # names = [name_01, name_02]
-
+        # читаем проверяем добавляем
+        # ==========================
     if CMD == 'table':
         xprint._message('ТАБЛИЦА РЕЗУЛЬТАТОВ')
         db_players = players._read()
