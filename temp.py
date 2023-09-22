@@ -67,7 +67,7 @@ while True:
         while True:
             try:
                 # ХОД
-                STEP = int(input(f'Ход {names[len(STEPS) % 2]}... '))    
+                STEP = int(input(f'Ход {names[len(STEPS) % 2]}... '))  
                 utils._addstep(STEP, STEPS, SIZE)
                 TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
                 # ВЫВОД ПОЛЯ
@@ -94,6 +94,14 @@ while True:
                 # continue
     if CMD == 'player':
         xprint._message('СМЕНИТЬ ИГРОКА')
+        name_01 = input('Введите имя игрока 1: > ')
+        print()
+        # ДОБАВЛЯЕМ ИГРОКА ЕСЛИ НЕТ В БАЗЕ
+        # if name_01 not in db_players:
+            # players._create(name_01)
+        # db_players = players._read() 
+        # names = [name_01, name_02]
+
     if CMD == 'table':
         xprint._message('ТАБЛИЦА РЕЗУЛЬТАТОВ')
         db_players = players._read()

@@ -1,5 +1,7 @@
-def _wins(size: int) -> list[set[int]]:
-    """Функция возвращает список сетов выигрышных комбинаций в зависимости от размера игрового поля."""
+from itertools import compress
+
+def _wins(size: int) -> list[set[int, ...]]:
+    """Функция возвращает список победных комбинаций в зависимости от размера игрового поля."""
     
     # Целевой список победных комбинаций
     wins_combinations = []
@@ -38,29 +40,35 @@ def _addstep(step, steps, size) -> list[int]:
         return steps
         
 
-def isWin(steps: list[int], wins: list[tuple]) -> bool:
-    """Функция проверки наличия выигрышной комбинации в списке шагов"""
-    steps1 = set(steps[::2])
-    steps2 = set(steps[1::2])
-    for win in wins:
-        if win <= steps1:
+def isWin(steps: list[int], wins: list[set[int, ...]]) -> bool:
+    """Функция проверки наличия выигрышной комбинации в списке шагов.
+    
+    Параметры: steps - список всех ходов, wins - список победных комбинаций.
+    Возвращает: True | False проверяя на подмножество победные комбинации в списке ходов.
+    """
+    crosses = set(steps[::2])
+    zeros = set(steps[1::2])
+    for comb in wins:
+        if comb <= crosses:
             return True
-        if win <= steps2:
+        if comb <= zeros:
             return True
     else:
         return False
         
-        
 def isDraw(steps: list[int], wins: list[set[int]]) -> bool:
-    """Функция исключает выигрышную комбинацию в списке выигрышных комбинаций"""
-    steps1 = set(steps[::2])
-    steps2 = set(steps[1::2])
-    
-    for i in range(len(wins) - 1, -1, -1):
-        if 0 < len(wins[i] - steps1) < len(wins[i]):
-            if 0 < len(wins[i] - steps2) < len(wins[i]):
-                wins.remove(wins[i])
-           
-    if len(wins) == 0:
-        return True
-        
+    """Функция исключает победную комбинацию из списка победную комбинаций.
+
+    Параметры: steps - список всех ходов, wins - список победных комбинаций.
+    Возвращает: True | False проверяя на истину список победных комбинаций.
+    """
+    crosses = set(steps[::2])
+    zeros = set(steps[1::2])
+    selectors = []
+    for comb in wins:
+        if comb & crosses and comb & zeros:
+            selectors.append(0)
+        else:
+            selectors.append(1)
+    wins = list(compress(wins, selectors))
+    return not bool(wins)
