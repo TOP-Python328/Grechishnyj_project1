@@ -46,8 +46,9 @@ def _read_save() -> dict:
     save_path = Path(path[0]) / 'saves.ttt' 
     text = save_path.read_text(encoding='utf-8')
     saves = text.split('\n')
+    
     db_saves = {}
-    for save in saves:
+    for save in saves[:-1]:
         players, steps, turns = save.split('!')
         players = tuple(players.split(','))
         steps = list(int(s) for s in steps.split(','))
