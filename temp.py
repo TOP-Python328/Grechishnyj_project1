@@ -1,8 +1,11 @@
+import user
 import menu
 import players
 import utils
 import xprint
 import saves
+import game
+
 
 # ПЕРВЫЙ ЗАПУСК
 TITLE = 'Крестики-Нолики'
@@ -12,175 +15,86 @@ print('version 0.0.2')
 xprint._table(HELP)
 
 # ИГРОК
-# ==========================
-# читаем проверяем добавляем
-db_players = players._read() 
-name_01 = input('Введите имя игрока 1: > ')
-print()
-# ДОБАВЛЯЕМ ИГРОКА ЕСЛИ НЕТ В БАЗЕ
-if name_01 not in db_players:
-    players._create(name_01)
-# читаем проверяем добавляем
-# ==========================
-# РЕЖИМ ИГРЫ
-xprint._table([('ОДИНОЧНАЯ ИГРА', 1), ('ИГРА С СОПЕРНИКОМ', 2)])
-game_mod = input('Выберете режим игры: > ')
-print()
-# ОДИН ИГРОК
-if game_mod == '1':
-    # УРОВЕНЬ СЛОЖНОСТИ
-    xprint._table([('ПРОСТО', 1), ('СЛОЖНО', 2)])
-    difficulty = input('Выберете уровень сложности: > ')
-    print()
-    if difficulty == '1':
-        name_02 = 'EASYBOT'
-    else:
-        name_02 = 'HARDBOT'
-# ДВА ИГРОКА
-# ==========================
-# читаем проверяем добавляем
-if game_mod == '2':
-    name_02 = input('Введите имя игрока 2: > ')
-    print()
-# ДОБАВЛЯЕМ ВТОРОГО ИГРОКА ЕСЛИ НЕТ В БАЗЕ
-if name_02 not in db_players:
-    players._create(name_02)
-db_players = players._read() 
-names = (name_01, name_02)
-# читаем проверяем добавляем
-# ==========================
 
-# ВЫБОР ТОКЕНА
-xprint._table([('Играть X', 1), ('Играть O', 2)]) 
-player_01_token = input(f'{name_01} выберете чем будете играть: > ')   
-if player_01_token == '2':
-    reversed(names)
-
+names = user._auth()
+db_players = players._read()
+print(names)
 
 SIZE = 3
 CMD = input('КОМАНДА МЕНЮ: > ')
-TOKENS = ('O', 'X')
+
 #ВКЛ/ВЫКЛ
 while True:
     if CMD == 'dim':
         SIZE = menu._dim()
     # ПРОЦЕСС ИГРЫ
     if CMD == 'new':
-        TURNS = [' ' for _ in range(SIZE**2)]
-        STEPS = []
-        WINS = utils._wins(SIZE)
-        STROUT = xprint._template(SIZE)
-        print(f'\n{STROUT.format(*TURNS)}', end='')
+        all_saves = saves._read_save()
+          
+        print(all_saves)
+        turns = [' ' for _ in range(SIZE**2)]
+        steps = []
+        all_saves[names] = (steps, turns)
+        result_game = game.play(names, steps, turns)
+        if 'save' in result_game:
+            print('Сохряняем игру')
+            all_saves[names] = (steps, turns)
+            saves._write_save(f'{saves._parse_ts(all_saves)}\n')
+        if 'win' in result_game:
+            print('Сохряняем победу')
+            winner = result_game['win'][0]
+            loser = result_game['win'][1]
+            players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
+            players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
+            all_saves.pop(names)
+            saves._write_save(f'{saves._parse_ts(all_saves)}\n')
+        if 'draw' in result_game:
+            print('Сохряняем ничью')
+            draw_01 = result_game['draw'][0]
+            draw_02 = result_game['draw'][1]
+            players._update(draw_01, 'draws', str(int(db_players[draw_01]['draws']) + 1))
+            players._update(draw_02, 'draws', str(int(db_players[draw_02]['draws']) + 1))
+            all_saves.pop(names)
+            saves._write_save(f'{saves._parse_ts(all_saves)}\n')
         
-        SAVE = {tuple(names):(STEPS, TURNS)}
-        print(SAVE)
-        
-        while True:
-            try:
-                # ХОД
-                
-                STEP = input(f'Ход {names[len(STEPS) % 2]}... ')
-                
-                # if not STEP:
-                if STEP == 'save':
-                    #SAVE[names] = (STEPS, TURNS)
-                    print(SAVE)
-                    STR_SAVE = f'{saves._parse_ts(SAVE)}\n'
-                    saves._write_save(STR_SAVE)
-                    xprint._message('Игра сохранена!')
-                    break
-                else:
-                    STEP = int(STEP)
-                    utils._addstep(STEP, STEPS, SIZE)
-                    TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
-                # ВЫВОД ПОЛЯ
-                print(f'\n{STROUT.format(*TURNS)}', end='') 
-                # НИЧЬЯ
-                if utils.isDraw(STEPS, WINS):
-                    # ОБНОВЛЕНИЕ ДАННЫХ
-                    players._update(name_01, 'draws', str(int(db_players[name_01]['draws']) + 1))
-                    players._update(name_02, 'draws', str(int(db_players[name_02]['draws']) + 1))
-                    xprint._message(f'The game ended in a draw...')
-                    break            
-                # ПОБЕДА
-                if utils.isWin(STEPS, WINS):
-                    # ОБНОВЛЕНИЕ ДАННЫХ
-                    winner = names[len(STEPS) % 2 - 1]
-                    loser = names[len(STEPS) % 2]
-                    players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
-                    players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
-                    xprint._message(f'Congratulations winner - {winner} !!!')
-                    break  
-            except:
-                print('except')
-
-
-                print('Вы ввели не число')
-                continue
     if CMD == 'load':
-        print('load')
-        SAVESGAME = saves._read_save()
-        if names in SAVESGAME:
-        
-            print(f'{SAVESGAME[names]=}')
-            STEPS = SAVESGAME[names][0]
-            TURNS = SAVESGAME[names][1]
-            SIZE = int(len(TURNS)**0.5)
-            print(f'{STEPS=}, {TURNS=}')
-            WINS = utils._wins(SIZE)
-            STROUT = xprint._template(SIZE)
-            print(f'\n{STROUT.format(*TURNS)}', end='')
-            while True:
-                try:
-                    # ХОД
-                    
-                    STEP = input(f'Ход {names[len(STEPS) % 2]}... ')
-                    
-                    # if not STEP:
-                    if STEP == 'save':
-                        #SAVE[names] = (STEPS, TURNS)
-                        print(SAVE)
-                        STR_SAVE = f'{saves._parse_ts(SAVE)}\n'
-                        saves._write_save(STR_SAVE)
-                        xprint._message('Игра сохранена!')
-                        break
-                    else:
-                        STEP = int(STEP)
-                        utils._addstep(STEP, STEPS, SIZE)
-                        TURNS[STEP - 1] = TOKENS[len(STEPS)%2]
-                    # ВЫВОД ПОЛЯ
-                    print(f'\n{STROUT.format(*TURNS)}', end='') 
-                    # НИЧЬЯ
-                    if utils.isDraw(STEPS, WINS):
-                        # ОБНОВЛЕНИЕ ДАННЫХ
-                        players._update(name_01, 'draws', str(int(db_players[name_01]['draws']) + 1))
-                        players._update(name_02, 'draws', str(int(db_players[name_02]['draws']) + 1))
-                        xprint._message(f'The game ended in a draw...')
-                        break            
-                    # ПОБЕДА
-                    if utils.isWin(STEPS, WINS):
-                        # ОБНОВЛЕНИЕ ДАННЫХ
-                        winner = names[len(STEPS) % 2 - 1]
-                        loser = names[len(STEPS) % 2]
-                        players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
-                        players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
-                        xprint._message(f'Congratulations winner - {winner} !!!')
-                        break  
-                except:
-                    print('except')
-
-
-                    print('Вы ввели не число')
-                    continue
+        all_saves = saves._read_save()
+        if names in all_saves:
+            steps = all_saves[names][0]
+            turns = all_saves[names][1]
             
+            result_game = game.play(names, steps, turns)
+            if 'save' in result_game:
+                print('Сохряняем игру')
+                all_saves[names] = (steps, turns)
+                saves._write_save(f'{saves._parse_ts(all_saves)}\n')
+            if 'win' in result_game:
+                print('Сохряняем победу')
+                winner = result_game['win'][0]
+                loser = result_game['win'][1]
+                players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
+                players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
+                all_saves.pop(names)
+                saves._write_save(f'{saves._parse_ts(all_saves)}\n')
+            if 'draw' in result_game:
+                print('Сохряняем ничью')
+                draw_01 = result_game['draw'][0]
+                draw_02 = result_game['draw'][1]
+                players._update(draw_01, 'draws', str(int(db_players[draw_01]['draws']) + 1))
+                players._update(draw_02, 'draws', str(int(db_players[draw_02]['draws']) + 1))
+                all_saves.pop(names)
+                saves._write_save(f'{saves._parse_ts(all_saves)}\n')
         else:
-            print('Игр нет')
+            xprint._message('Сохраненных партий не найдено!')
+
+            
     if CMD == 'player':
         # ==========================
         # читаем проверяем добавляем
         xprint._message('СМЕНИТЬ ИГРОКА')
-        name_01 = input('Введите имя игрока 1: > ')
-        print()
+        names = user._auth()
+        print(names)
+
         # ДОБАВЛЯЕМ ИГРОКА ЕСЛИ НЕТ В БАЗЕ
         # if name_01 not in db_players:
             # players._create(name_01)

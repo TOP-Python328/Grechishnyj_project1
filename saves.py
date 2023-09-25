@@ -37,7 +37,7 @@ save = 'player_01,player_02!1,2,4,3,9!X,0,0,X,,,,,X'
 def _write_save(obj: str) -> None:
     """doc"""
     save_path = Path(path[0]) / 'saves.ttt'
-    with open(save_path, 'a', encoding='utf-8') as fileout:
+    with open(save_path, 'w', encoding='utf-8') as fileout:
         fileout.write(obj)
            
     

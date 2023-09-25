@@ -29,3 +29,4 @@ def _update(player_name: str, key: str, value: str):
     file = Path(path[0]) / 'players.ini'
     with open(file, 'w', encoding='utf-8') as fileout:
         players.write(fileout)
+        

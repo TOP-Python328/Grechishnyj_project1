@@ -47,21 +47,21 @@ def _menu():
             print('Ошибка ввода:')
             command = input('Введите команду: ') 
         
-        for key, value in options.items():
-            if command in value:
+        for optinon in options:
+            if command in optinon:
                 if command in ('new', 'n', 'начать', 'н'):
-                    print(key)
+                    print(command)
                 if command in ('load', 'l', 'загрузка', 'з'):
-                    print(key)
+                    print(command)
                 if command in ('help', 'h', 'помощь', 'п'):
                     _help(options)
                 if command in ('player', 'p', 'игрок', 'и'):
-                    print(key)
+                    print(command)
                 if command in ('table', 't', 'таблица', 'т'):
-                    print(key)
+                    print(command)
                 if command in ('dim', 'd', 'размер', 'р'):
                     print(_dim())
                 if command in ('quit', 'q', 'выход', 'в'):
-                    print(key)
+                    print(command)
 
     
