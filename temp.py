@@ -6,13 +6,12 @@ import xprint
 import saves
 import game
 import xstat
-
+import litlib
 
 # ПЕРВЫЙ ЗАПУСК
-title = 'Крестики-Нолики'
 helper = menu.options
-xprint._message(title)
-xprint.left('version 0.0.3')
+xprint._message(litlib.title_game)
+xprint.right(litlib.version)
 xprint.table(helper)
 
 # АВТОРИЗАЦИЯ ИГРОКА
@@ -21,11 +20,10 @@ db_players = players._read()
 db_saves = saves._read_save()
 
 size = 3
-command = input('КОМАНДА МЕНЮ: > ')
+command = input(litlib.title_menu)
 
 #ВКЛ/ВЫКЛ
 while True:
-    
     # НОВАЯ ИГРА
     if command == 'new':
         turns = [' ' for _ in range(size**2)]
@@ -43,18 +41,18 @@ while True:
             game.update_players(result_game, db_players)
             game.update_save(result_game, db_saves)
         else:
-            xprint._message('Сохраненных партий не найдено!')
+            xprint._message(litlib.not_save)
     # ПОКАЗАТЬ ПОМОЩЬ    
     if command == 'help':
         xprint.table(helper)
     # СМЕНИТЬ ИГРОКА
     if command == 'player':
-        xprint._message('СМЕНИТЬ ИГРОКА')
+        xprint._message(litlib.player_change)
         names = user.auth()
         db_players = players._read()
     # ПОКАЗАТЬ СТАТИСТИКУ
     if command == 'table':
-        xprint._message('ТАБЛИЦА РЕЗУЛЬТАТОВ')
+        xprint._message(litlib.result_table)
         xprint.table(xstat.show_games()) 
     # ИЗМЕНИТЬ РАЗМЕР ПОЛЯ
     if command == 'dim':
@@ -62,5 +60,5 @@ while True:
     if command == 'quit':
         break
     
-    command = input('КОМАНДА МЕНЮ: > ')
-xprint._message('ИГРА ЗАКОНЧЕНА!')
+    command = input(litlib.title_menu)
+xprint._message(litlib.end_game)

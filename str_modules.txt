@@ -12,7 +12,7 @@ temp
         utils
         xprint
     xstat
-        players
+        players  
     players
         from configparser import ConfigParser
         from pathlib import Path
@@ -24,6 +24,7 @@ temp
     saves
         from pathlib import Path
         from sys import path
+    litlib
         
 temp (точка входа) - будет переименовано
 user (получаем пользователя, авторизация)
@@ -34,3 +35,4 @@ game (игровой процесс, обновление файлов)
 saves (обрабатываем данные из файла saves.ttt)
 utils (проверка победы, ничьи, победных комбинаций)
 xstat (формирование статистических данных)
+litlib (литералы для взаимодействия с пользователем)

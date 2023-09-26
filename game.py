@@ -2,6 +2,7 @@ import players
 import saves
 import utils
 import xprint
+import litlib
 
 def play(
         names: tuple[str, str], 
@@ -21,30 +22,30 @@ def play(
         print(names[0])
         try:
             # ХОД
-            step = input(f'Ход {names[len(steps) % 2]}... ')
-            
+            step = input(litlib.title_step.format(names[len(steps) % 2]))
             if step == 'save':
-                xprint._message('Игра сохранена!')
+                xprint._message(litlib.game_saved)
                 return {'save': (names, steps, turns)}
             else:
                 step = int(step)
                 utils.add_step(step, steps, size)
                 turns[step - 1] = tokens[len(steps)%2]
-    
             # НИЧЬЯ
             if utils.is_draw(steps, wins):
-                xprint._message(f'The game ended in a draw...')
+                xprint._message(litlib.end_draw)
                 return {'draw': (names)}         
             # ПОБЕДА
             if utils.is_win(steps, wins):
                 winner = names[len(steps) % 2 - 1]
                 loser = names[len(steps) % 2]
-                xprint._message(f'Congratulations winner - {winner} !!!')
+                xprint._message(litlib.end_win.format(winner))
                 return {'win': (winner, loser)}
         except:
-            print('Вы ввели не число')
+            print(litlib.error_digit)
             break
 
+
+# ПЕРЕДЕЛАТЬ
 def update_save(item: dict[str: tuple], db_file) -> None:
     """doc"""
     values = list(value for value in item.values())[0]
@@ -55,6 +56,7 @@ def update_save(item: dict[str: tuple], db_file) -> None:
         db_file.pop(values)
         saves._write_save(f'{saves.parse_to_string(db_file)}\n')     
 
+# ПЕРЕДЕЛАТЬ
 def update_players(item: dict[str: tuple], db_file):
     """doc"""
     values = list(value for value in item.values())[0]

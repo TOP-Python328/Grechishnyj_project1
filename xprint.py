@@ -77,14 +77,14 @@ def table(dt_table: list[tuple]) -> None:
         tr = ''
         end_str = f'#'
         for cell in row:
-            tr += ''.join(f' {cell[1]:<{cell[0]}}  |')
+            tr += ''.join(f' {cell[1]:<{cell[0]}}  ')
         table += start_str +  f'{tr[:-1]} '
         table += f'{" " * (w_terminal - len(tr) - len(start_str) - len(end_str))}{end_str}'
     table += line + border  
     print(table)
     return None
     
-def left(string) -> None:
+def right(string) -> None:
     """doc"""
     w_terminal = get_terminal_size().columns
     str_left = '\n' + ' ' * (w_terminal - len(string)) + string
