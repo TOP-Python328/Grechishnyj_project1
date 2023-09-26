@@ -5,319 +5,62 @@ import utils
 import xprint
 import saves
 import game
+import xstat
 
 
 # ПЕРВЫЙ ЗАПУСК
-TITLE = 'Крестики-Нолики'
-HELP = menu.options
-xprint._message(TITLE)
-print('version 0.0.2')
-xprint._table(HELP)
+title = 'Крестики-Нолики'
+helper = menu.options
+xprint._message(title)
+xprint.left('version 0.0.3')
+xprint.table(helper)
 
-# ИГРОК
-
-names = user._auth()
+# АВТОРИЗАЦИЯ ИГРОКА
+names = user.auth()
 db_players = players._read()
-print(names)
+db_saves = saves._read_save()
 
-SIZE = 3
-CMD = input('КОМАНДА МЕНЮ: > ')
+size = 3
+command = input('КОМАНДА МЕНЮ: > ')
 
 #ВКЛ/ВЫКЛ
 while True:
-    if CMD == 'dim':
-        SIZE = menu._dim()
-    # ПРОЦЕСС ИГРЫ
-    if CMD == 'new':
-        all_saves = saves._read_save()
-          
-        print(all_saves)
-        turns = [' ' for _ in range(SIZE**2)]
+    
+    # НОВАЯ ИГРА
+    if command == 'new':
+        turns = [' ' for _ in range(size**2)]
         steps = []
-        all_saves[names] = (steps, turns)
+        db_saves[names] = (steps, turns)
         result_game = game.play(names, steps, turns)
-        if 'save' in result_game:
-            print('Сохряняем игру')
-            all_saves[names] = (steps, turns)
-            saves._write_save(f'{saves._parse_ts(all_saves)}\n')
-        if 'win' in result_game:
-            print('Сохряняем победу')
-            winner = result_game['win'][0]
-            loser = result_game['win'][1]
-            players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
-            players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
-            all_saves.pop(names)
-            saves._write_save(f'{saves._parse_ts(all_saves)}\n')
-        if 'draw' in result_game:
-            print('Сохряняем ничью')
-            draw_01 = result_game['draw'][0]
-            draw_02 = result_game['draw'][1]
-            players._update(draw_01, 'draws', str(int(db_players[draw_01]['draws']) + 1))
-            players._update(draw_02, 'draws', str(int(db_players[draw_02]['draws']) + 1))
-            all_saves.pop(names)
-            saves._write_save(f'{saves._parse_ts(all_saves)}\n')
-        
-    if CMD == 'load':
-        all_saves = saves._read_save()
-        if names in all_saves:
-            steps = all_saves[names][0]
-            turns = all_saves[names][1]
-            
+        game.update_players(result_game, db_players)
+        game.update_save(result_game, db_saves)  
+    # ЗАГРУКА ИГРЫ
+    if command == 'load':
+        if names in db_saves:
+            steps = db_saves[names][0]
+            turns = db_saves[names][1]
             result_game = game.play(names, steps, turns)
-            if 'save' in result_game:
-                print('Сохряняем игру')
-                all_saves[names] = (steps, turns)
-                saves._write_save(f'{saves._parse_ts(all_saves)}\n')
-            if 'win' in result_game:
-                print('Сохряняем победу')
-                winner = result_game['win'][0]
-                loser = result_game['win'][1]
-                players._update(winner, 'wins', str(int(db_players[winner]['wins']) + 1))
-                players._update(loser, 'loses', str(int(db_players[loser]['loses']) + 1))
-                all_saves.pop(names)
-                saves._write_save(f'{saves._parse_ts(all_saves)}\n')
-            if 'draw' in result_game:
-                print('Сохряняем ничью')
-                draw_01 = result_game['draw'][0]
-                draw_02 = result_game['draw'][1]
-                players._update(draw_01, 'draws', str(int(db_players[draw_01]['draws']) + 1))
-                players._update(draw_02, 'draws', str(int(db_players[draw_02]['draws']) + 1))
-                all_saves.pop(names)
-                saves._write_save(f'{saves._parse_ts(all_saves)}\n')
+            game.update_players(result_game, db_players)
+            game.update_save(result_game, db_saves)
         else:
             xprint._message('Сохраненных партий не найдено!')
-
-            
-    if CMD == 'player':
-        # ==========================
-        # читаем проверяем добавляем
+    # ПОКАЗАТЬ ПОМОЩЬ    
+    if command == 'help':
+        xprint.table(helper)
+    # СМЕНИТЬ ИГРОКА
+    if command == 'player':
         xprint._message('СМЕНИТЬ ИГРОКА')
-        names = user._auth()
-        print(names)
-
-        # ДОБАВЛЯЕМ ИГРОКА ЕСЛИ НЕТ В БАЗЕ
-        # if name_01 not in db_players:
-            # players._create(name_01)
-        # db_players = players._read() 
-        # names = [name_01, name_02]
-        # читаем проверяем добавляем
-        # ==========================
-    if CMD == 'table':
-        xprint._message('ТАБЛИЦА РЕЗУЛЬТАТОВ')
+        names = user.auth()
         db_players = players._read()
-        table_line = tuple('—' * 10 for _ in range(4))
-        table_stat = [('PLAYER', 'WINS', 'DRAWS', 'LOSES'), table_line]
-        for name, stat in db_players.items():
-            if name in ('DEFAULT', 'HARDBOT','EASYBOT'):
-                continue
-            table_stat.append((name, *(value for value in stat.values()))) 
-        xprint._table(table_stat) 
-        # КОМАНДА МЕНЮ: > table
-        #===========================================================================#
-        #                                                                           #
-        #                            ТАБЛИЦА РЕЗУЛЬТАТОВ                            #
-        #                                                                           #
-        #===========================================================================#
-        #===========================================================================#
-        #                                                                           #
-        #     PLAYER      | WINS        | DRAWS       | LOSES                       #
-        #     ——————————  | ——————————  | ——————————  | ——————————                  #
-        #     USER        | 0           | 1           | 1                           #
-        #     ADMIN       | 2           | 1           | 0                           #
-        #     Pavel       | 0           | 0           | 1                           #
-        #     Oleg        | 0           | 0           | 0                           #
-        #     QWERTY      | 3           | 1           | 0                           #
-        #     TREWQ       | 0           | 1           | 0                           #
-        #     ASDFG       | 0           | 0           | 1                           #
-        #     ZXCVB       | 1           | 1           | 0                           #
-        #     MNBVC       | 0           | 1           | 1                           #
-        #     ZENIT       | 1           | 0           | 0                           #
-        #     QWERT       | 1           | 0           | 1                           #
-        #     SDFG        | 0           | 0           | 0                           #
-        #                                                                           #
-        #===========================================================================#        
-
-    if CMD == 'quit':
+    # ПОКАЗАТЬ СТАТИСТИКУ
+    if command == 'table':
+        xprint._message('ТАБЛИЦА РЕЗУЛЬТАТОВ')
+        xprint.table(xstat.show_games()) 
+    # ИЗМЕНИТЬ РАЗМЕР ПОЛЯ
+    if command == 'dim':
+        size = menu._dim()
+    if command == 'quit':
         break
     
-    CMD = input('КОМАНДА МЕНЮ: > ')
+    command = input('КОМАНДА МЕНЮ: > ')
 xprint._message('ИГРА ЗАКОНЧЕНА!')
-
-# 13:09:46 > python -i temp.py
-#==========================================================================================================================#
-#                                                                                                                          #
-#                                                     Крестики-Нолики                                                      #
-#                                                                                                                          #
-#==========================================================================================================================#
-# version 0.0.2
-#==========================================================================================================================#
-#                                                                                                                          #
-#     начать новую партию                  | new     | n  | начать    | н                                                  #
-#     загрузить существующую партию        | load    | l  | загрузка  | з                                                  #
-#     отобразить раздел помощи             | help    | h  | помощь    | п                                                  #
-#     создать или переключиться на игрока  | player  | p  | игрок     | и                                                  #
-#     отобразить таблицу результатов       | table   | t  | таблица   | т                                                  #
-#     изменить размер поля                 | dim     | d  | размер    | р                                                  #
-#     выйти                                | quit    | q  | выход     | в                                                  #
-#                                                                                                                          #
-#==========================================================================================================================#
-
-# Введите имя игрока 1: > USER
-
-#==========================================================================================================================#
-#                                                                                                                          #
-#     ОДИНОЧНАЯ ИГРА     | 1                                                                                               #
-#     ИГРА С СОПЕРНИКОМ  | 2                                                                                               #
-#                                                                                                                          #
-#==========================================================================================================================#
-
-# Выберете режим игры: > 1
-
-#==========================================================================================================================#
-#                                                                                                                          #
-#     ПРОСТО  | 1                                                                                                          #
-#     СЛОЖНО  | 2                                                                                                          #
-#                                                                                                                          #
-#==========================================================================================================================#
-
-# Выберете уровень сложности: > 1
-
-#==========================================================================================================================#
-#                                                                                                                          #
-#     Играть X  | 1                                                                                                        #
-#     Играть O  | 0                                                                                                        #
-#                                                                                                                          #
-#==========================================================================================================================#
-
-# Выберете за кого играть: > 0
-# ['BOTEASY', 'USER']
-# КОМАНДА МЕНЮ: > dim
-# Введите размер поля: 4
-# КОМАНДА МЕНЮ: > new
-#    |   |   |
-# ————————————————
-#    |   |   |
-# ————————————————
-#    |   |   |
-# ————————————————
-#    |   |   |
-
-# Ход BOTEASY: > 6
-#    |   |   |
-# ————————————————
-#    | X |   |
-# ————————————————
-#    |   |   |
-# ————————————————
-#    |   |   |
-
-# Игра продолжается...
-# Ход USER: > 7
-#    |   |   |
-# ————————————————
-#    | X | O |
-# ————————————————
-#    |   |   |
-# ————————————————
-#    |   |   |
-
-# Игра продолжается...
-# Ход BOTEASY: > 11
-#    |   |   |
-# ————————————————
-#    | X | O |
-# ————————————————
-#    |   | X |
-# ————————————————
-#    |   |   |
-
-# Игра продолжается...
-# Ход USER: > 10
-#    |   |   |
-# ————————————————
-#    | X | O |
-# ————————————————
-#    | O | X |
-# ————————————————
-#    |   |   |
-
-# Игра продолжается...
-# Ход BOTEASY: > 4
-#    |   |   | X
-# ————————————————
-#    | X | O |
-# ————————————————
-#    | O | X |
-# ————————————————
-#    |   |   |
-
-# Игра продолжается...
-# Ход USER: > 16
-#    |   |   | X
-# ————————————————
-#    | X | O |
-# ————————————————
-#    | O | X |
-# ————————————————
-#    |   |   | O
-
-# Игра продолжается...
-# Ход BOTEASY: > 13
-#    |   |   | X
-# ————————————————
-#    | X | O |
-# ————————————————
-#    | O | X |
-# ————————————————
-#  X |   |   | O
-
-# Игра продолжается...
-# Ход USER: > 1
-#  O |   |   | X
-# ————————————————
-#    | X | O |
-# ————————————————
-#    | O | X |
-# ————————————————
-#  X |   |   | O
-
-#==========================================================================================================================#
-#                                                                                                                          #
-#                                               The game ended in a draw...                                                #
-#                                                                                                                          #
-#==========================================================================================================================#
-# КОМАНДА МЕНЮ: > quit
-#==========================================================================================================================#
-#                                                                                                                          #
-#                                                     ИГРА ЗАКОНЧЕНА!                                                      #
-#                                                                                                                          #
-#==========================================================================================================================#
-
-
-
-# Ход BOTEASY: > 100
-#  X | X | X | X | X | X | X | X | X | O
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  O |   |   |   |   |   |   |   |   | X
-# ————————————————————————————————————————
-#  X | O | O | O | O | O | O | O | O | O
-
-#==========================================#
-#                                          #
-#       The game ended in a draw...        #
-#                                          #
-#==========================================#
