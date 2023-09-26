@@ -14,7 +14,7 @@ def _template(size: int) -> str:
     return field_template
 
 
-def _message(text: str) -> str:
+def _message(text: str) -> None:
     """Функция выводит в stdout форматированную строку сообщения в рамке по ширине CLI"""
     
     width = get_terminal_size().columns
@@ -55,9 +55,10 @@ def _message(text: str) -> str:
             
     text_main += (empt_line + bord_line)
     print(text_main, end="")
+    return None
 
       
-def _table(dt_table: list[tuple]) -> str:
+def table(dt_table: list[tuple]) -> None:
     """Функция печатает в консоли таблицу в рамке"""
     
     w_terminal = get_terminal_size().columns
@@ -81,4 +82,14 @@ def _table(dt_table: list[tuple]) -> str:
         table += f'{" " * (w_terminal - len(tr) - len(start_str) - len(end_str))}{end_str}'
     table += line + border  
     print(table)
+    return None
+    
+def left(string) -> None:
+    """doc"""
+    w_terminal = get_terminal_size().columns
+    str_left = '\n' + ' ' * (w_terminal - len(string)) + string
+    print(str_left)
+    return None
+    
+    
 
