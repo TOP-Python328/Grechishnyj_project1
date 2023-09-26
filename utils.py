@@ -1,7 +1,11 @@
 from itertools import compress
 
-def _wins(size: int) -> list[set[int, ...]]:
-    """Функция возвращает список победных комбинаций в зависимости от размера игрового поля."""
+def fill_wins(size: int) -> list[set[int, ...]]:
+    """Функция возвращает список победных комбинаций в зависимости от размера игрового поля.
+    
+    Параметры: size - размер игрового поля.
+    Возвращает: список победных множеств, которые содержат в себе номера клеток 
+    """
     
     # Целевой список победных комбинаций
     wins_combinations = []
@@ -33,14 +37,14 @@ def _wins(size: int) -> list[set[int, ...]]:
     return wins_combinations 
 
 
-def _addstep(step, steps, size) -> list[int]:
+def add_step(step, steps, size) -> list[int]:
     """Функция проверяет корректность ввода и добавляет значение хода если проверка пройдена"""
     if step not in steps and 0 < step <= size**2: 
         steps.append(step)
         return steps
         
 
-def isWin(steps: list[int], wins: list[set[int, ...]]) -> bool:
+def is_win(steps: list[int], wins: list[set[int, ...]]) -> bool:
     """Функция проверки наличия выигрышной комбинации в списке шагов.
     
     Параметры: steps - список всех ходов, wins - список победных комбинаций.
@@ -54,7 +58,7 @@ def isWin(steps: list[int], wins: list[set[int, ...]]) -> bool:
     else:
         return False
         
-def isDraw(steps: list[int], wins: list[set[int]]) -> bool:
+def is_draw(steps: list[int], wins: list[set[int]]) -> bool:
     """Функция исключает победную комбинацию из списка победную комбинаций.
 
     Параметры: steps - список всех ходов, wins - список победных комбинаций.
