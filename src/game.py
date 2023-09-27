@@ -31,12 +31,16 @@ def play(
                 turns[step - 1] = tokens[len(steps)%2]
             # НИЧЬЯ
             if utils.is_draw(steps, wins):
+                print(f'\n{strout.format(*turns)}', end='')
+                print(f'Ничья\n')
                 xprint._message(litlib.end_draw)
                 return False        
             # ПОБЕДА
             if utils.is_win(steps, wins):
                 winner = names[len(steps) % 2 - 1]
                 loser = names[len(steps) % 2]
+                print(f'\n{strout.format(*turns)}', end='')
+                print(f'Победитель - {winner}\n')
                 xprint._message(litlib.end_win.format(winner))
                 return ['win_game', (winner, loser)]
         except:
