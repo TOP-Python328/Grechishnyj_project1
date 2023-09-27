@@ -7,7 +7,7 @@ import litlib
 def play(
         names: tuple[str, str], 
         steps: list[int], 
-        turns: tuple[str, str, str]
+        turns: tuple[str, str, str],
     ) -> tuple[str, ...]:
     """doc"""
     
@@ -19,13 +19,12 @@ def play(
     while True:
         # ВЫВОД ИГРОВОГО ПОЛЯ
         print(f'\n{strout.format(*turns)}', end='')
-        print(names[0])
         try:
             # ХОД
             step = input(litlib.title_step.format(names[len(steps) % 2]))
             if step == 'save':
                 xprint._message(litlib.game_saved)
-                return {'save': (names, steps, turns)}
+                return ['save_game', (steps, turns)]
             else:
                 step = int(step)
                 utils.add_step(step, steps, size)
@@ -33,42 +32,17 @@ def play(
             # НИЧЬЯ
             if utils.is_draw(steps, wins):
                 xprint._message(litlib.end_draw)
-                return {'draw': (names)}         
+                return False        
             # ПОБЕДА
             if utils.is_win(steps, wins):
                 winner = names[len(steps) % 2 - 1]
                 loser = names[len(steps) % 2]
                 xprint._message(litlib.end_win.format(winner))
-                return {'win': (winner, loser)}
+                return ['win_game', (winner, loser)]
         except:
             print(litlib.error_digit)
             break
 
 
-# ПЕРЕДЕЛАТЬ
-def update_save(item: dict[str: tuple], db_file) -> None:
-    """doc"""
-    values = list(value for value in item.values())[0]
-    if 'save' in item:
-        db_file[values[0]] = values[1:]
-        saves._write_save(f'{saves.parse_to_string(db_file)}\n')
-    if 'win' in item or 'draw' in item:
-        db_file.pop(values)
-        saves._write_save(f'{saves.parse_to_string(db_file)}\n')     
-
-# ПЕРЕДЕЛАТЬ
-def update_players(item: dict[str: tuple], db_file):
-    """doc"""
-    values = list(value for value in item.values())[0]
-    if 'win' in item:
-        winner = values[0]
-        loser = values[1]
-        players._update(winner, 'wins', str(int(db_file[winner]['wins']) + 1))
-        players._update(loser, 'loses', str(int(db_file[loser]['loses']) + 1))
-    if 'draw' in item:
-        draw_01 = values[0]
-        draw_02 = values[1]
-        players._update(draw_01, 'draws', str(int(db_file[draw_01]['draws']) + 1))
-        players._update(draw_02, 'draws', str(int(db_file[draw_02]['draws']) + 1))
     
 
