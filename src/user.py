@@ -1,3 +1,8 @@
+"""
+Авторизация (регистрация) игрока.
+Исполнительный модуль.
+"""
+
 import players
 import xprint
 import litlib

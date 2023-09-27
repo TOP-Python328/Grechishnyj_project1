@@ -1,12 +1,22 @@
-import user
-import menu
+""" 
+Точка входа.
+Модуль верхнего уровня.
+"""
 import players
-import utils
-import xprint
 import saves
+import user
 import game
+
+import menu
+
+import xprint
 import xstat
 import litlib
+
+# Проверка на то импортирован модуль или передан интерпритатору.
+# Условие выполняется когда модуль передан интерпритатору.
+if __name__ == '__main__':
+    ...
 
 # ПЕРВЫЙ ЗАПУСК
 helper = menu.options

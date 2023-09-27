@@ -1,3 +1,8 @@
+""" 
+Обработка данных файла - сохраненные игры.
+Вспомогательный модуль.
+"""
+
 from pathlib import Path
 from sys import path
 

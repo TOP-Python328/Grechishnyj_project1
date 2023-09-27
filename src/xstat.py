@@ -1,3 +1,8 @@
+"""
+Модуль обработки статичeстических данных.
+Вспомогательный модуль.
+"""
+
 import players
 
 def show_games():
@@ -12,4 +17,5 @@ def show_games():
     return table_stat
     
 
-
+def sort_games():
+    """doc"""

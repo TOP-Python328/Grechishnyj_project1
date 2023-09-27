@@ -1,3 +1,8 @@
+""" 
+Обработка данных фала - игроки.
+Вспомогательный модуль.
+"""
+
 from configparser import ConfigParser
 from pathlib import Path
 from sys import path

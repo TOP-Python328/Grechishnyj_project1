@@ -1,3 +1,8 @@
+"""
+Форматированне и вывод данных в консоль
+Вспомогательный модуль
+""" 
+
 from shutil import get_terminal_size
 
 def _template(size: int) -> str:
