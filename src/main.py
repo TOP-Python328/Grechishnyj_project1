@@ -31,9 +31,9 @@ while True:
             steps = saves_db[players][0]
             turns = saves_db[players][1]
             game_result = game.play(players, steps, turns)
+            files.update_all(players, game_result, saves_db, players_db)
         else:
             view.header(data.MSG_HEAD['not_save'])
-        files.update_all(players, game_result, saves_db, players_db)
     if command == 'help':
         view.table(data.COMMANDS)
     if command == 'player':

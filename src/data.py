@@ -8,15 +8,15 @@ from sys import path, argv
 
 # Режим разработки 
 DEBUG: bool = '-d' in argv
-test_path = 'test/' if DEBUG else ''
+test_path = 'test' if DEBUG else ''
 
 # Файлы хранения данных
 FILE_NAME_PLAYERS = 'players.ini'
 FILE_NAME_SAVES = 'saves.ttt'
 ROOT_DIR = Path(path[0]).parent
 DATA_DIR = ROOT_DIR / 'data'
-players_path = DATA_DIR / f'{test_path}{FILE_NAME_PLAYERS}'
-saves_path = DATA_DIR / f'{test_path}{FILE_NAME_SAVES}'
+players_path = DATA_DIR / f'{test_path}/{FILE_NAME_PLAYERS}'
+saves_path = DATA_DIR / f'{test_path}/{FILE_NAME_SAVES}'
 
 # Переменные для аннотаций
 Players = dict[str, dict[str, int]]
