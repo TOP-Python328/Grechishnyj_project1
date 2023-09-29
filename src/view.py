@@ -16,9 +16,9 @@ def template(size: int) -> str:
             field_template += '\n'
             break
         line += 1
-        field_template += '\n' + '————'*size + '\n'
+        field_template += '\n' + '————' * (size - 1) + '———' + '\n'
     return field_template
-
+    
 
 def table(table_dt: list[tuple]) -> None:
     """Функция печатает в консоли таблицу в рамке"""
@@ -79,3 +79,20 @@ def header(text: str) -> None:
     print(text_main, end="")
     return None
 
+
+def print_right(text) -> None:
+    """Функция выводит в stdout текст выравнивая его справа"""
+    w_terminal = get_terminal_size().columns
+    text = text.split('\n')
+    text_right = ''
+    for line in text:
+        text_right += ' ' * (w_terminal - len(line)) + line
+    print(text_right)
+
+
+def print_play(template: str, chars: tuple, right: bool=False) -> None:
+    """Функция выводит в stdout игровое поле"""
+    if right:
+        print_right(f'\n{template.format(*chars)}')
+    else:
+        print(f'\n{template.format(*chars)}')

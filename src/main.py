@@ -14,6 +14,7 @@ import utils
 # def start():
     # """"""
 view.header(data.MSG_HEAD['title'])
+view.print_right(data.MSG_HEAD['version'])
 view.table(data.COMMANDS)
 players_db = files.read_players()
 saves_db = files.read_saves()
@@ -21,14 +22,19 @@ players = user.auth(players_db)
 
 # def mainloop():
     # """"""
-command = input(data.MSG_HEAD['menu'])
+
 while True:
-    if command == 'new':
+    try:
+        command = input(data.MSG_HEAD['menu'])
+    except:
+        print(data.MSG_GAME['error'])
+    
+    if command in data.COMMANDS[0]:
         steps, turns = [], [' ' for _ in range(data.size**2)]
         game_result = game.play(players, steps, turns)
         files.update_all(players, game_result, saves_db, players_db)
     # ИСПРАВИТЬ: ну вы чего, Павел — это же проверка одной переменной, в одну итерацию она не может принять несколько разных значений — а вы независимые друг от друга проверки устраиваете, стыдно
-    if command == 'load':
+    elif command in data.COMMANDS[2]:
         if players in saves_db:
             steps = saves_db[players][0]
             turns = saves_db[players][1]
@@ -36,25 +42,31 @@ while True:
             files.update_all(players, game_result, saves_db, players_db)
         else:
             view.header(data.MSG_HEAD['not_save'])
-    if command == 'help':
+    elif command in data.COMMANDS[3]:
         view.table(data.COMMANDS)
-    if command == 'player':
+    elif command in data.COMMANDS[4]:
         view.header(data.MSG_HEAD['player_change'])
         players = user.auth(players_db)
-    if command == 'table':
+    elif command in data.COMMANDS[5]:
         view.table(utils.statistics(players_db))
-    if command == 'dim':
+    elif command in data.COMMANDS[6]:
         view.header(data.MSG_HEAD['dim'])
         data.size = utils.dim()
-    if command == 'quit':
+        data.wins = utils.fill_wins(data.size)
+        data.strout = view.template(data.size)
+    elif command in data.COMMANDS[7]:
         break
-    command = input(data.MSG_HEAD['menu'])    
+    else:
+        print(data.MSG_GAME['error'])
+    # command = input(data.MSG_HEAD['menu'])    
    
 # def end():
     # """"""  
 view.header(data.MSG_HEAD['end'])    
 
-
+def end():
+    print('... ... ...')
+end()
 # if __name__ == '__main__':
     # start()
     # mainloop()

@@ -5,6 +5,8 @@
 
 from pathlib import Path
 from sys import path, argv
+import utils
+import view
 
 # Режим разработки 
 DEBUG: bool = '-d' in argv
@@ -21,6 +23,9 @@ saves_path = DATA_DIR / f'{test_path}/{FILE_NAME_SAVES}'
 # Переменные для аннотаций
 Players = dict[str, dict[str, int]]
 Saves = dict[tuple[str, str], tuple[list[int], list[str]]]
+Names = tuple[str, str]
+Steps = list[int]
+Turns = list[str]
 
 # Команды управления приложением.
 COMMANDS = [
@@ -68,6 +73,10 @@ MSG_USER = {
 }
 
 size = 3
+tokens = ('X','O')
+wins = utils.fill_wins(size)
+strout = view.template(size)
+
 
 
 

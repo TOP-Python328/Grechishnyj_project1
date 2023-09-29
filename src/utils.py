@@ -8,7 +8,7 @@ from itertools import compress
 
 # ИСПОЛЬЗОВАТЬ: во время аннотаций множеств, как и для списков, мы указываем типы сразу для всех элементов
 # КОММЕНТАРИЙ: я бы перенёс всё же эту развёрнутую аннотацию в data, объявив там отдельную переменную, и использовав её здесь
-def fill_wins(size: int) -> list[set[int]]:
+def fill_wins(size) -> list[set[int]]:
     # ИСПОЛЬЗОВАТЬ: разметку reStructuredText для документации функций — пригодится дальше, при работе в IDE
     """Функция возвращает список победных комбинаций в зависимости от размера игрового поля.
     
@@ -23,27 +23,27 @@ def fill_wins(size: int) -> list[set[int]]:
     # Для сбора комбинаций используется двумерный список
     main_list = [all_numbers[i:i+size] for i in range(0, len(all_numbers), size)]
     # Победная комбинация по главной диагонали 
-    diagonal_main = []
+    diagonal_main = set()
     # Победная комбинация по обратной диагонали
-    diagonal_back = []
+    diagonal_back = set()
     
     for i in range(size):
         # ИСПРАВИТЬ: работайте сразу с множествами, лишние преобразования не нужны
-        # Победные комбинации по рядам
-        rows = []
-        # Победные комбинации по колонкам
-        columns = []    
+        # Победные комбинации по рядам и колонкам
+        rows = set()
+        cols = set()    
         for j in range(size):
-            rows.append(main_list[i][j])
-            columns.append(main_list[j][i])
+            rows.add(main_list[i][j])
+            cols.add(main_list[j][i])
             if i == j:
-                diagonal_main.append(main_list[i][j])
+                diagonal_main.add(main_list[i][j])
             if i + j == size - 1: 
-                diagonal_back.append(main_list[i][j])
-        wins_combinations.append(set(rows))
-        wins_combinations.append(set(columns))   
-    wins_combinations.append(set(diagonal_main))
-    wins_combinations.append(set(diagonal_back))
+                diagonal_back.add(main_list[i][j])
+        wins_combinations.append(rows)
+        wins_combinations.append(cols)   
+    wins_combinations.append(diagonal_main)
+    wins_combinations.append(diagonal_back)
+    print(wins_combinations)
     return wins_combinations 
 
 
@@ -97,7 +97,6 @@ def statistics(players):
             continue
         table_stat.append((name, *(value for value in state.values()))) 
     return table_stat
-
 
 # ИСПРАВИТЬ: перепишите эту функцию так, чтобы она в модуле data переопределяла все находящиеся там и связанные с размером поля переменные — и не вычисляйте эти переменные в каждой функции
 def dim() -> int:

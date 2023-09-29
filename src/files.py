@@ -61,25 +61,23 @@ def write_saves(db_saves: data.Saves) -> None:
 
 # оптимизировать   
 def update_all(players, game_result, saves_db, players_db) -> None:
+    """doc"""
+    key_save = game_result[1]
     if 'save' in game_result:
-        saves_db[game_result[1]] = game_result[2]
+        saves_db[key_save] = game_result[2]
         write_saves(saves_db)
+        return None 
+    player_1 = key_save[0]
+    player_2 = key_save[1]
     if 'win' in game_result:
-        if players in saves_db:
-            saves_db.pop(players)
-            write_saves(saves_db)
-        win = game_result[1][0]
-        los = game_result[1][1]
-        players_db[win]['wins'] += 1
-        players_db[los]['loses'] += 1
-        write_players(players_db)
-    if 'draw' in game_result:
-        if players in saves_db:
-            saves_db.pop(players)
-            write_saves(saves_db)
-        player1 = game_result[1][0]
-        player2 = game_result[1][1]
-        players_db[player1]['draws'] += 1
-        players_db[player2]['draws'] += 1
-        write_players(players_db)
+        players_db[player_1]['wins'] += 1
+        players_db[player_2]['loses'] += 1
+    elif 'draw' in game_result:
+        players_db[player_1]['draws'] += 1
+        players_db[player_2]['draws'] += 1  
+    if players in saves_db:
+        saves_db.pop(players)
+    write_saves(saves_db)   
+    write_players(players_db)
+    
 
