@@ -2,6 +2,7 @@
 Точка входа.
 Модуль верхнего уровня.
 """
+
 import view
 import data
 import files
@@ -11,7 +12,6 @@ import utils
 
 # def start():
     # """"""
-    
 view.header(data.MSG_HEAD['title'])
 view.table(data.COMMANDS)
 players_db = files.read_players()

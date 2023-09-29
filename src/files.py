@@ -5,8 +5,9 @@
 from configparser import ConfigParser
 import data
 
+
 # Функции обработки игроков
-def read_players(file_path: str=data.players_path) -> data.Players:
+def read_players(file_path: str = data.players_path) -> data.Players:
     """Функция чтения данных из файла players.ini"""
     players = ConfigParser()
     players.read(file_path)
@@ -18,15 +19,17 @@ def read_players(file_path: str=data.players_path) -> data.Players:
         }
     return players_db 
 
-def write_players(db_players: data.Players) ->  None:
+
+def write_players(db_players: data.Players) -> None:
     """Функция записи данных в файл players.ini"""
     players = ConfigParser()
     players.read_dict(db_players)
     with open(data.players_path, 'w', encoding='utf-8') as fileout:
         players.write(fileout)
 
-# Функции обработки сохраненных игр    
-def read_saves(file_path: str=data.saves_path) -> data.Saves:
+
+# Функции обработки сохраненных игр
+def read_saves(file_path: str = data.saves_path) -> data.Saves:
     """Функция чтения файла saves.ttt"""
     saves = file_path.read_text(encoding='utf-8')
     saves = saves.strip().split('\n')
@@ -41,7 +44,8 @@ def read_saves(file_path: str=data.saves_path) -> data.Saves:
         turns = list(turns.split(','))
         db_saves[players] = (steps, turns)
     return db_saves
-    
+
+
 def write_saves(db_saves: data.Saves) -> None:
     """Функция записи данных в файл saves.ttt"""
     text_saves = []
@@ -53,7 +57,7 @@ def write_saves(db_saves: data.Saves) -> None:
         text_saves.append(f'{players}!{steps}!{turns}')
     text_saves = '\n'.join(text_saves)
     data.saves_path.write_text(text_saves, encoding='utf-8')
-    
+
 
 # оптимизировать   
 def update_all(players, game_result, saves_db, players_db) -> None:
@@ -67,7 +71,7 @@ def update_all(players, game_result, saves_db, players_db) -> None:
         win = game_result[1][0]
         los = game_result[1][1]
         players_db[win]['wins'] += 1
-        players_db[los]['loses'] += 1        
+        players_db[los]['loses'] += 1
         write_players(players_db)
     if 'draw' in game_result:
         if players in saves_db:
@@ -76,5 +80,6 @@ def update_all(players, game_result, saves_db, players_db) -> None:
         player1 = game_result[1][0]
         player2 = game_result[1][1]
         players_db[player1]['draws'] += 1
-        players_db[player2]['draws'] += 1        
+        players_db[player2]['draws'] += 1
         write_players(players_db)
+

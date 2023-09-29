@@ -15,6 +15,7 @@ def create() -> dict[str, int]:
     """Функция генерации статистических полей для нового игрока"""
     return {key: 0 for key in ('wins', 'draws', 'loses')}
 
+
 def auth(players_db: data.Players) -> tuple[str, str]:
     """Функция авторизации (регистрации) игрока и настройка режима игры"""
     user_name = input(data.MSG_USER['name'])
@@ -33,7 +34,7 @@ def auth(players_db: data.Players) -> tuple[str, str]:
             opponent = data.MSG_USER['bots'][0]
     elif user_input == '2':
         opponent = input(data.MSG_USER['opponent'])
-        
+
     if opponent not in players_db:
         players_db[opponent] = create()
         files.write_players(players_db)
@@ -44,3 +45,4 @@ def auth(players_db: data.Players) -> tuple[str, str]:
     if token == '2':
         players = players[::-1] 
     return players
+

@@ -22,7 +22,7 @@ saves_path = DATA_DIR / f'{test_path}/{FILE_NAME_SAVES}'
 Players = dict[str, dict[str, int]]
 Saves = dict[tuple[str, str], tuple[list[int], list[str]]]
 
-# Комманды управления приложением.
+# Команды управления приложением.
 COMMANDS = [
     ('начать новую партию', 'new', 'n', 'начать', 'н'),
     ('сохранить текущую игру', 'save', 's', 'сохранить', 'с'),
@@ -42,7 +42,6 @@ MSG_GAME = {
     'win': 'Congratulations winner - {} !!!',
     'error': 'Не корректный ввод, повторите...',
 }
-
 # Заголовки приложения.
 MSG_HEAD = {
     'title': 'TIC TAC TOE',
@@ -55,7 +54,6 @@ MSG_HEAD = {
     'end': 'ИГРА ЗАКОНЧЕНА!',
     
 }
-
 # Сообщения при авторизации пользователя и выборе режима.
 MSG_USER = {
     'name': 'Введите имя игрока: > ',

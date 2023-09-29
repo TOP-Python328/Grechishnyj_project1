@@ -1,9 +1,10 @@
 """
-Форматированне и вывод данных в консоль.
+Форматирование и вывод данных в консоль.
 Вспомогательный модуль.
 """ 
 
 from shutil import get_terminal_size
+
 
 def template(size: int) -> str:
     """Функция генерирует игровое поле для отображения в консоли"""
@@ -15,8 +16,9 @@ def template(size: int) -> str:
             field_template += '\n'
             break
         line += 1
-        field_template += '\n' + '————'*(size) + '\n'
+        field_template += '\n' + '————'*size + '\n'
     return field_template
+
 
 def table(table_dt: list[tuple]) -> None:
     """Функция печатает в консоли таблицу в рамке"""
@@ -36,12 +38,13 @@ def table(table_dt: list[tuple]) -> None:
         end_str = f'#'
         for cell in row:
             tr += ''.join(f' {cell[1]:<{cell[0]}}  ')
-        table += start_str +  f'{tr[:-1]} '
+        table += start_str + f'{tr[:-1]} '
         table += f'{" " * (w_terminal - len(tr) - len(start_str) - len(end_str))}{end_str}'
     table += line + border  
     print(table)
     return None
-    
+
+
 def header(text: str) -> None:
     """Функция выводит в stdout форматированную строку сообщения в рамке по ширине CLI"""
     width = get_terminal_size().columns

@@ -2,15 +2,17 @@
 Дополнительные функции.
 Вспомогательный модуль.
 """
+
 from itertools import compress
 
+
 def fill_wins(size: int) -> list[set[int, ...]]:
+    # ИСПОЛЬЗОВАТЬ: разметку reStructuredText для документации функций — пригодится дальше, при работе в IDE
     """Функция возвращает список победных комбинаций в зависимости от размера игрового поля.
     
-    Параметры: size - размер игрового поля.
-    Возвращает: список победных множеств, которые содержат в себе номера клеток 
+    :param size: размер игрового поля.
+    :returns: список победных множеств, которые содержат в себе номера клеток
     """
-    
     # Целевой список победных комбинаций
     wins_combinations = []
     # Список всех номеров игрового поля
@@ -20,7 +22,7 @@ def fill_wins(size: int) -> list[set[int, ...]]:
     # Победная комбинация по главной диагонали 
     diagonal_main = [] 
     # Победная комбинация по обратной диагонали
-    diagonal_back = []    
+    diagonal_back = []
     
     for i in range(size):
         # Победные комбинации по рядам
@@ -46,7 +48,7 @@ def add_step(step, steps, size) -> list[int]:
     if step not in steps and 0 < step <= size**2: 
         steps.append(step)
         return steps
-        
+
 
 def is_win(steps: list[int], wins: list[set[int, ...]]) -> bool:
     """Функция проверки наличия выигрышной комбинации в списке шагов.
@@ -61,7 +63,8 @@ def is_win(steps: list[int], wins: list[set[int, ...]]) -> bool:
             return True
     else:
         return False
-        
+
+
 def is_draw(steps: list[int], wins: list[set[int]]) -> bool:
     """Функция исключает победную комбинацию из списка победную комбинаций.
 
@@ -78,8 +81,8 @@ def is_draw(steps: list[int], wins: list[set[int]]) -> bool:
             selectors.append(1)
     wins = list(compress(wins, selectors))
     return not bool(wins)
-    
-    
+
+
 def statistics(players):
     """doc"""
     table_line = tuple('—' * 10 for _ in range(4))
@@ -89,7 +92,8 @@ def statistics(players):
             continue
         table_stat.append((name, *(value for value in state.values()))) 
     return table_stat
-    
+
+
 def dim() -> int:
     """Функция запрашивает и возвращает размер поля"""
     while True:
@@ -102,3 +106,4 @@ def dim() -> int:
                 print('Введен не допустимый размер.')
         else:
             print('Введено не число.')
+
