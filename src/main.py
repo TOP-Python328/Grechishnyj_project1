@@ -10,6 +10,7 @@ import user
 import game
 import utils
 
+
 # def start():
     # """"""
 view.header(data.MSG_HEAD['title'])
@@ -26,6 +27,7 @@ while True:
         steps, turns = [], [' ' for _ in range(data.size**2)]
         game_result = game.play(players, steps, turns)
         files.update_all(players, game_result, saves_db, players_db)
+    # ИСПРАВИТЬ: ну вы чего, Павел — это же проверка одной переменной, в одну итерацию она не может принять несколько разных значений — а вы независимые друг от друга проверки устраиваете, стыдно
     if command == 'load':
         if players in saves_db:
             steps = saves_db[players][0]
