@@ -1,4 +1,159 @@
 """
-Режим одиночной игры - бот.
-Исполнительный модуль.
+Исполнительный модуль — бот.
 """
+
+# стандартная библиотека
+from random import choice
+# текущий проект
+import data
+import matrix
+
+
+
+def easy_mode() -> data.SquareIndex:
+    """Возвращает номер случайной свободной клетки игрового поля."""
+    data.steps_turns = dict(zip(data.steps, data.turns))
+    return choice(tuple(set(data.empty) - set(data.steps_turns)))
+
+
+      
+    
+def hard_mode(pointer: int) -> data.SquareIndex:
+    """Вычисляет наиболее выигрышный ход и возвращает номер клетки для этого хода."""
+    data.start_matrices = matrix.calc_sm_cross(), matrix.calc_sm_zero()
+    tw = weights_tokens(pointer)
+    # if data.DEBUG:
+        # data.debug_data |= {'tokens': tw}
+    ew = weights_empty(tw)
+    # if data.DEBUG:
+        # data.debug_data |= {'empty': ew}
+    if len(data.steps_turns) < 2*data.size:
+        ew = matrices_sum(ew, data.start_matrices[pointer])
+        
+        weights_clear(tw, ew)
+    # if data.DEBUG:
+        # data.debug_data |= {'result': ew}
+    ew = vectorization(ew)
+    if any(ew):
+        return index_of_rand_max(ew) + 1
+    else:
+        return easy_mode()
+
+        
+
+
+def weights_tokens(pointer: int) -> data.Matrix:
+    """Конструирует и возвращает матрицу весов занятых ячеек игрового поля."""
+    
+    board = tuple((data.empty | data.steps_turns).values())
+    
+    board = matricization(board)
+
+    tokensweights = [[0]*data.size for _ in data.dim_range]
+
+    for i in data.dim_range:
+        for j in data.dim_range:
+            if board[i][j] == data.tokens[pointer]:
+                tokensweights[i][j] = data.WEIGHT_OWN
+            elif board[i][j] == data.tokens[pointer-1]:
+                tokensweights[i][j] = data.WEIGHT_FOE
+    return tokensweights
+
+
+def weights_empty(tokensweights: data.Matrix) -> data.Matrix:
+    """Вычисляет и возвращает матрицу весов свободных ячеек игрового поля."""
+    emptyweights = [[0]*data.size for _ in data.dim_range]
+    for i in data.dim_range:
+        for j in data.dim_range:
+            
+            if not tokensweights[i][j]:
+                series = [
+                    get_row(tokensweights, i),
+                    get_column(tokensweights, j),
+                    get_maindiag(tokensweights, i, j),
+                    get_antidiag(tokensweights, i, j)                
+                ]
+                for seq in series:                   
+                    if not data.WEIGHTS <= set(seq):
+                        emptyweights[i][j] += sum(seq)**2
+                emptyweights[i][j] = int(emptyweights[i][j])
+    return emptyweights
+
+
+def weights_clear(
+        tokensweights: data.Matrix,
+        solvingweights: data.Matrix
+) -> None:
+    """Обрабатывает матрицу принятия решения, приравнивая к нолю элементы, соответствующие занятым на поле клеткам."""
+    for i in data.dim_range:
+        for j in data.dim_range:
+            if tokensweights[i][j]:
+                solvingweights[i][j] = 0
+
+
+def vectorization(matrix: data.Matrix) -> data.Series:
+    """Возвращает плоскую последовательность, полученную в результате преобразования переданной матрицы."""
+    return [cell for row in matrix for cell in row]
+
+
+def matricization(sequence: data.Series) -> data.Matrix:
+    """Возвращает квадратную матрицу, полученную в результате преобразования переданной плоской последовательности."""
+    return [sequence[i*data.size:(i+1)*data.size] for i in data.dim_range]
+
+def get_row(
+        matrix: data.Matrix,
+        row_index: int
+) -> data.Series:
+    """Возвращает ряд матрицы по переданному индексу."""
+    return matrix[row_index]
+
+
+def get_column(
+        matrix: data.Matrix,
+        column_index: int
+) -> data.Series:
+    """Возвращает столбец матрицы по переданному индексу."""
+    return [row[column_index] for row in matrix]
+
+
+def get_maindiag(
+        matrix: data.Matrix,
+        row_index: int,
+        column_index: int
+) -> data.Series:
+    """Возвращает главную диагональ матрицы, если элемент по переданным индексам ей принадлежит."""
+    if row_index == column_index:
+        return [matrix[i][i] for i in data.dim_range]
+    return []
+
+
+def get_antidiag(
+        matrix: data.Matrix,
+        row_index: int,
+        column_index: int
+) -> data.Series:
+    """Возвращает побочную диагональ матрицы, если элемент по переданным индексам ей принадлежит."""
+    if row_index == data.size - column_index - 1:
+        return [matrix[i][-i-1] for i in data.dim_range]
+    return []
+
+
+def matrices_sum(
+        matrix1: data.Matrix,
+        matrix2: data.Matrix,
+        *matrices: data.Matrix
+) -> data.Matrix:
+    """Возвращает результат математического сложения двух и более матриц."""
+    matrices = matrix1, matrix2, *matrices
+    result = [[0]*data.size for _ in data.dim_range]
+    for i in data.dim_range:
+        for j in data.dim_range:
+            result[i][j] = sum(m[i][j] for m in matrices)
+    return result
+
+
+def index_of_rand_max(series: data.Series) -> int:
+    """Возвращает индекс случайного среди равных максимальных значений в последовательности."""
+    m = max(series)
+    return choice([i for i, v in enumerate(series) if v == m])
+

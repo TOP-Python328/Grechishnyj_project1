@@ -2,7 +2,8 @@
 Глобальные переменные, условные константы.
 Вспомогательный модуль.
 """
-
+from collections.abc import Sequence, Callable
+from numbers import Real
 from pathlib import Path
 from sys import path, argv
 import utils
@@ -26,6 +27,12 @@ Saves = dict[tuple[str, str], tuple[list[int], list[str]]]
 Names = tuple[str, str]
 Steps = list[int]
 Turns = list[str]
+SquareIndex = int
+
+Series = Sequence[Real | str]
+Matrix = Sequence[Series]
+
+
 
 # Команды управления приложением.
 COMMANDS = [
@@ -73,10 +80,30 @@ MSG_USER = {
 }
 
 size = 3
+size_range = [i+1 for i in range(size**2)]
+dim_range = range(size)
+
 tokens = ('X','O')
 wins = utils.fill_wins(size)
 strout = view.template(size)
 
+# упорядоченный список сделанных ходов
+steps = []
+# упорядоченный список символов (X, O) сделанных ходов
+turns = [' ' for _ in range(size**2)]
+# словарь ячеек игрового поля со значением сделанного хода  --> номер: символ (X, O)
+steps_turns: dict[int, str] = {}
+
+
+# словарь всех ячеек игрового поля --> номер: ' '
+empty: dict[int, str] = None
+
+# стратегические матрицы
+start_matrices: tuple[Matrix, Matrix] = tuple()
 
 
 
+# веса токенов
+WEIGHT_OWN: float = 1.5
+WEIGHT_FOE: float = 1.0
+WEIGHTS: set[float] = {WEIGHT_OWN, WEIGHT_FOE}

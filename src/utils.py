@@ -43,7 +43,6 @@ def fill_wins(size) -> list[set[int]]:
         wins_combinations.append(cols)   
     wins_combinations.append(diagonal_main)
     wins_combinations.append(diagonal_back)
-    print(wins_combinations)
     return wins_combinations 
 
 

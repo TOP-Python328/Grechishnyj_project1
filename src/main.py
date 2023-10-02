@@ -11,6 +11,9 @@ import game
 import utils
 
 
+
+
+
 # def start():
     # """"""
 view.header(data.MSG_HEAD['title'])
@@ -30,15 +33,18 @@ while True:
         print(data.MSG_GAME['error'])
     
     if command in data.COMMANDS[0]:
-        steps, turns = [], [' ' for _ in range(data.size**2)]
-        game_result = game.play(players, steps, turns)
+        data.steps = []
+        data.turns = [' ' for _ in range(data.size**2)]
+        data.empty = {num: ' ' for num in data.size_range}
+        game_result = game.play(players)
         files.update_all(players, game_result, saves_db, players_db)
     # ИСПРАВИТЬ: ну вы чего, Павел — это же проверка одной переменной, в одну итерацию она не может принять несколько разных значений — а вы независимые друг от друга проверки устраиваете, стыдно
     elif command in data.COMMANDS[2]:
         if players in saves_db:
-            steps = saves_db[players][0]
-            turns = saves_db[players][1]
-            game_result = game.play(players, steps, turns)
+            data.steps = saves_db[players][0]
+            data.turns = saves_db[players][1]
+           
+            game_result = game.play(players)
             files.update_all(players, game_result, saves_db, players_db)
         else:
             view.header(data.MSG_HEAD['not_save'])
@@ -52,8 +58,18 @@ while True:
     elif command in data.COMMANDS[6]:
         view.header(data.MSG_HEAD['dim'])
         data.size = utils.dim()
+        data.size_range = [i+1 for i in range(data.size**2)]
         data.wins = utils.fill_wins(data.size)
         data.strout = view.template(data.size)
+        data.turns = [' ' for _ in range(data.size**2)]
+        data.dim_range = range(data.size)
+
+        print(f'{data.size=}')
+        print(f'{data.wins=}')
+        print(f'{data.turns=}')
+        print(f'{data.size_range=}')
+        print(f'{data.dim_range=}')
+        print(f'{data.empty=}')
     elif command in data.COMMANDS[7]:
         break
     else:
