@@ -58,8 +58,7 @@ def write_saves(db_saves: data.Saves) -> None:
     text_saves = '\n'.join(text_saves)
     data.saves_path.write_text(text_saves, encoding='utf-8')
 
-
-# оптимизировать   
+  
 def update_all(players, game_result, saves_db, players_db) -> None:
     """doc"""
     key_save = game_result[1]

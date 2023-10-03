@@ -6,7 +6,7 @@
 from random import choice
 # текущий проект
 import data
-import matrix
+import matrix_st
 
 
 
@@ -14,13 +14,11 @@ def easy_mode() -> data.SquareIndex:
     """Возвращает номер случайной свободной клетки игрового поля."""
     data.steps_turns = dict(zip(data.steps, data.turns))
     return choice(tuple(set(data.empty) - set(data.steps_turns)))
-
-
-      
+ 
     
 def hard_mode(pointer: int) -> data.SquareIndex:
     """Вычисляет наиболее выигрышный ход и возвращает номер клетки для этого хода."""
-    data.start_matrices = matrix.calc_sm_cross(), matrix.calc_sm_zero()
+    data.start_matrices = matrix_st.calc_sm_cross(), matrix_st.calc_sm_zero()
     tw = weights_tokens(pointer)
     # if data.DEBUG:
         # data.debug_data |= {'tokens': tw}
@@ -29,7 +27,6 @@ def hard_mode(pointer: int) -> data.SquareIndex:
         # data.debug_data |= {'empty': ew}
     if len(data.steps_turns) < 2*data.size:
         ew = matrices_sum(ew, data.start_matrices[pointer])
-        
         weights_clear(tw, ew)
     # if data.DEBUG:
         # data.debug_data |= {'result': ew}
@@ -38,19 +35,14 @@ def hard_mode(pointer: int) -> data.SquareIndex:
         return index_of_rand_max(ew) + 1
     else:
         return easy_mode()
-
-        
+  
 
 
 def weights_tokens(pointer: int) -> data.Matrix:
     """Конструирует и возвращает матрицу весов занятых ячеек игрового поля."""
-    
     board = tuple((data.empty | data.steps_turns).values())
-    
     board = matricization(board)
-
     tokensweights = [[0]*data.size for _ in data.dim_range]
-
     for i in data.dim_range:
         for j in data.dim_range:
             if board[i][j] == data.tokens[pointer]:
@@ -65,7 +57,6 @@ def weights_empty(tokensweights: data.Matrix) -> data.Matrix:
     emptyweights = [[0]*data.size for _ in data.dim_range]
     for i in data.dim_range:
         for j in data.dim_range:
-            
             if not tokensweights[i][j]:
                 series = [
                     get_row(tokensweights, i),
@@ -99,6 +90,7 @@ def vectorization(matrix: data.Matrix) -> data.Series:
 def matricization(sequence: data.Series) -> data.Matrix:
     """Возвращает квадратную матрицу, полученную в результате преобразования переданной плоской последовательности."""
     return [sequence[i*data.size:(i+1)*data.size] for i in data.dim_range]
+
 
 def get_row(
         matrix: data.Matrix,

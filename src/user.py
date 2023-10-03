@@ -31,10 +31,9 @@ def auth(players_db: data.Players) -> tuple[str, str]:
         if user_input == '1':
             opponent = data.MSG_USER['bots'][0]
         else:
-            opponent = data.MSG_USER['bots'][0]
+            opponent = data.MSG_USER['bots'][1]
     elif user_input == '2':
         opponent = input(data.MSG_USER['opponent'])
-
     if opponent not in players_db:
         players_db[opponent] = create()
         files.write_players(players_db)

@@ -4,11 +4,12 @@
 """
 
 from itertools import compress
-
+import data
+import view
 
 # ИСПОЛЬЗОВАТЬ: во время аннотаций множеств, как и для списков, мы указываем типы сразу для всех элементов
 # КОММЕНТАРИЙ: я бы перенёс всё же эту развёрнутую аннотацию в data, объявив там отдельную переменную, и использовав её здесь
-def fill_wins(size) -> list[set[int]]:
+def fill_wins(size: int) -> list[set[int]]:
     # ИСПОЛЬЗОВАТЬ: разметку reStructuredText для документации функций — пригодится дальше, при работе в IDE
     """Функция возвращает список победных комбинаций в зависимости от размера игрового поля.
     
@@ -47,9 +48,9 @@ def fill_wins(size) -> list[set[int]]:
 
 
 # ДОБАВИТЬ: аннотацию параметров
-def add_step(step, steps, size) -> list[int]:
+def add_step(step: int, steps: list[int], size: int) -> list[int]:
     """Функция проверяет корректность ввода и добавляет значение хода если проверка пройдена"""
-    if step not in steps and 0 < step <= size**2: 
+    if 0 < step <= size**2: 
         steps.append(step)
         return steps
 
@@ -57,8 +58,9 @@ def add_step(step, steps, size) -> list[int]:
 def is_win(steps: list[int], wins: list[set[int, ...]]) -> bool:
     """Функция проверки наличия выигрышной комбинации в списке шагов.
     
-    Параметры: steps - список всех ходов, wins - список победных комбинаций.
-    Возвращает: True | False проверяя на подмножество победные комбинации в списке ходов.
+    :param steps: список всех ходов.
+    :param wins: список победных комбинаций.
+    :returns: True | False проверяя на подмножество победные комбинации в списке ходов.
     """
     crosses = set(steps[::2])
     zeros = set(steps[1::2])
@@ -69,11 +71,12 @@ def is_win(steps: list[int], wins: list[set[int, ...]]) -> bool:
         return False
 
 
-def is_draw(steps: list[int], wins: list[set[int]]) -> bool:
+def is_draw(steps: list[int], wins: list[set[int, ...]]) -> bool:
     """Функция исключает победную комбинацию из списка победную комбинаций.
 
-    Параметры: steps - список всех ходов, wins - список победных комбинаций.
-    Возвращает: True | False проверяя на истину список победных комбинаций.
+    :param steps: список всех ходов.
+    :param wins: список победных комбинаций.
+    :returns: True | False проверяя на истину список победных комбинаций.
     """
     crosses = set(steps[::2])
     zeros = set(steps[1::2])
@@ -87,8 +90,8 @@ def is_draw(steps: list[int], wins: list[set[int]]) -> bool:
     return not bool(wins)
 
 
-def statistics(players):
-    """doc"""
+def statistics(players: data.Players) -> data.Statistics:
+    """Функция формирует список кортежей данных со статистикой из базы игроков"""
     table_line = tuple('—' * 10 for _ in range(4))
     table_stat = [('PLAYER', 'WINS', 'DRAWS', 'LOSES'), table_line]
     for name, state in players.items():
@@ -98,14 +101,20 @@ def statistics(players):
     return table_stat
 
 # ИСПРАВИТЬ: перепишите эту функцию так, чтобы она в модуле data переопределяла все находящиеся там и связанные с размером поля переменные — и не вычисляйте эти переменные в каждой функции
-def dim() -> int:
-    """Функция запрашивает и возвращает размер поля"""
+def configure() -> None:
+    """Функция запрашивает размер поля и переопределяет все связанные с ним переменные"""
     while True:
         size = input('Введите размер поля: ') 
         if size.isdigit(): 
             size = int(size)
             if 2 < size <= 20:
-                return size
+                data.size = size
+                data.size_range = [i+1 for i in range(data.size**2)]
+                data.wins = fill_wins(data.size)
+                data.strout = view.template(data.size)
+                data.turns = [' ' for _ in range(data.size**2)]
+                data.dim_range = range(data.size)
+                return None
             else:
                 print('Введен не допустимый размер.')
         else:

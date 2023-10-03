@@ -6,12 +6,12 @@ from collections.abc import Sequence, Callable
 from numbers import Real
 from pathlib import Path
 from sys import path, argv
-import utils
-import view
+
 
 # Режим разработки 
 DEBUG: bool = '-d' in argv
 test_path = 'test' if DEBUG else ''
+
 
 # Файлы хранения данных
 FILE_NAME_PLAYERS = 'players.ini'
@@ -21,6 +21,7 @@ DATA_DIR = ROOT_DIR / 'data'
 players_path = DATA_DIR / f'{test_path}/{FILE_NAME_PLAYERS}'
 saves_path = DATA_DIR / f'{test_path}/{FILE_NAME_SAVES}'
 
+
 # Переменные для аннотаций
 Players = dict[str, dict[str, int]]
 Saves = dict[tuple[str, str], tuple[list[int], list[str]]]
@@ -28,10 +29,9 @@ Names = tuple[str, str]
 Steps = list[int]
 Turns = list[str]
 SquareIndex = int
-
 Series = Sequence[Real | str]
 Matrix = Sequence[Series]
-
+Statistics = list[tuple[str, str, str, str]]
 
 
 # Команды управления приложением.
@@ -46,14 +46,18 @@ COMMANDS = [
     ('выйти', 'quit', 'q', 'выход', 'в'),
 ]
 
+
 # Сообщения пользователю во время игры.
 MSG_GAME = {
     'step': 'Ход {}... ',
     'save': 'Игра сохранена!',
     'draw': 'The game ended in a draw...',
     'win': 'Congratulations winner - {} !!!',
+    'busy': 'Клетка занята, повторите...',
     'error': 'Не корректный ввод, повторите...',
 }
+
+
 # Заголовки приложения.
 MSG_HEAD = {
     'title': 'TIC TAC TOE',
@@ -63,9 +67,10 @@ MSG_HEAD = {
     'player_change': 'СМЕНИТЬ ИГРОКА.',
     'table': 'ТАБЛИЦА РЕЗУЛЬТАТОВ.',
     'dim': 'ИЗМЕНЕНИТЕ РАЗМЕР ИГРОВОГО ПОЛЯ!',
-    'end': 'ИГРА ЗАКОНЧЕНА!',
-    
+    'end': 'ИГРА ЗАКОНЧЕНА!',  
 }
+
+
 # Сообщения при авторизации пользователя и выборе режима.
 MSG_USER = {
     'name': 'Введите имя игрока: > ',
@@ -79,30 +84,35 @@ MSG_USER = {
     'token': '{} выберете чем будете играть: > ', 
 }
 
+
+# база игроков
+players_db: Players = {}
+# база сохранений
+saves_db: Saves = {} 
+# игровая пара: имена
+players: Names = None
+# размер игрового поля
 size = 3
+# числовая последовательность от 1 до количества ячеек поля
 size_range = [i+1 for i in range(size**2)]
+# числовая последовательность от 0 до размера поля
 dim_range = range(size)
-
+# игровые символы
 tokens = ('X','O')
-wins = utils.fill_wins(size)
-strout = view.template(size)
-
+# список победных комбинаций
+wins: list[set[int, int, int]] = None
+# шаблон игрового поля
+strout: str = None
 # упорядоченный список сделанных ходов
 steps = []
 # упорядоченный список символов (X, O) сделанных ходов
 turns = [' ' for _ in range(size**2)]
 # словарь ячеек игрового поля со значением сделанного хода  --> номер: символ (X, O)
 steps_turns: dict[int, str] = {}
-
-
 # словарь всех ячеек игрового поля --> номер: ' '
 empty: dict[int, str] = None
-
 # стратегические матрицы
 start_matrices: tuple[Matrix, Matrix] = tuple()
-
-
-
 # веса токенов
 WEIGHT_OWN: float = 1.5
 WEIGHT_FOE: float = 1.0

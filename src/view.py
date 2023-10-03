@@ -80,7 +80,7 @@ def header(text: str) -> None:
     return None
 
 
-def print_right(text) -> None:
+def print_right(text: str) -> None:
     """Функция выводит в stdout текст выравнивая его справа"""
     w_terminal = get_terminal_size().columns
     text = text.split('\n')
