@@ -17,18 +17,14 @@ def start() -> None:
     """Функция авторизации пользователя и выбора режима игры."""
     view.header(data.MSG_HEAD['title'])
     view.print_right(data.MSG_HEAD['version'])
+    help.info_game('ПРАВИЛА ИГРЫ')
+    help.rules_game('ИНТЕРФЕЙС')
     help.main_menu(data.COMMANDS)
     data.players_db = files.read_players()
     data.saves_db = files.read_saves()
     data.user_autn = user.auth(data.players_db)
-    data.players = data.user_autn
+    data.players = data.user_autn 
 
-
-
-
-
-
-    
 
 def mainloop() -> None:
     """Функция - суперцикл. Игровой процесс и обработка файлов данных."""
@@ -64,7 +60,7 @@ def mainloop() -> None:
             else:
                 view.header(data.MSG_HEAD['not_save'])
         elif command in data.COMMANDS['отобразить раздел помощи']:
-            view.table(data.COMMANDS)
+            help.main_menu(data.COMMANDS)
         elif command in data.COMMANDS['создать или переключиться на игрока']:
             data.players = None
             view.header(data.MSG_HEAD['player_change'])

@@ -150,7 +150,52 @@ def print_box_(text: str, char_top: str = '-', char_bottom: str = '-') -> None:
     text_main += (empt_line + border_bottom) if border_bottom == '=' else border_bottom
     print(text_main, end="")
     return None
+
+# переделать
+def print_box(head: str, body: str, symbol: str = None) -> None:
+    """Функция печати правил игры"""
     
-def print_box_(head: str, body: str, char_top: str = '-', char_bottom: str = '-') -> None:
-    """Функция"""
     
+    width = get_terminal_size().columns
+    inside = width - 6
+    char_line = '='
+    char_spot = ' '
+    char_empt = ' '
+    
+    border_line = char_line * width
+    empt_line = char_empt * width
+    
+    lh = len(head)
+    margin_left = ((inside - lh) // 2) + 2
+    margin_right = margin_left + 1 if lh % 2 else margin_left
+    head_line = char_spot + char_empt * margin_left + head + char_empt * margin_right + char_spot
+    
+    print(border_line, end='')
+    print(empt_line, end='')
+    print(head_line)
+    
+    body = body.split('\n')
+    for line in body:
+        start = 0
+        batch = inside
+        body_line = []
+        while batch < len(line):
+            body_line.append(line[start:batch])
+            start, batch = batch,  batch + inside
+        body_line.append(line[start:])
+        for line_part in body_line:
+            line_part = char_spot + char_empt * 2 + line_part + char_empt * 2 + char_spot
+            print(line_part, end='') 
+        print('\n')
+    
+    tmp = template(3)
+    if symbol == 'X':
+        symbols = ('X', 'O', ' ', ' ', 'X', ' ', 'O', ' ', 'X')
+        show_tmp = print_center(tmp.format(*symbols))
+    else:
+        symbols = range(1, 10)
+        show_tmp = print_center(tmp.format(*symbols))
+    print()
+    print(show_tmp)
+    print(empt_line, end='')
+    print(border_line)
