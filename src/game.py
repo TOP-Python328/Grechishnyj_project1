@@ -30,7 +30,6 @@ def play(names: data.Names) -> tuple[str, ...]:
 
         # ИСПРАВИТЬ: вычислите индекс-указатель отдельно
         pointer = len(data.steps) % 2
-        
         view.print_play(data.strout, data.turns, pointer)
         if pointer:
             view.print_right(data.MSG_GAME['step'].format(names[pointer]))
@@ -63,6 +62,7 @@ def play(names: data.Names) -> tuple[str, ...]:
         if utils.is_draw(data.steps, data.wins):
             # УДАЛИТЬ: раз уж завели для всех выводов отдельный модуль — что действительно удобно — то и этот вывод тоже туда уберите
             # print(f'\n{template.format(*chars)}', end='')
+            data.empty = {num: ' ' for num in data.size_range}
             view.print_play(data.strout, data.turns, pointer)
             view.header(data.MSG_GAME['draw'])
             return ['draw', names]
@@ -70,6 +70,7 @@ def play(names: data.Names) -> tuple[str, ...]:
         if utils.is_win(data.steps, data.wins):
             winner = names[pointer]
             loser = names[pointer - 1]
+            data.empty = {num: ' ' for num in data.size_range}
             view.print_play(data.strout, data.turns, pointer)
             view.header(data.MSG_GAME['win'].format(winner))
             return ['win', (winner, loser)]

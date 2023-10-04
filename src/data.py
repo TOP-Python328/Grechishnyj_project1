@@ -25,6 +25,8 @@ saves_path = DATA_DIR / f'{test_path}/{FILE_NAME_SAVES}'
 # Переменные для аннотаций
 Players = dict[str, dict[str, int]]
 Saves = dict[tuple[str, str], tuple[list[int], list[str]]]
+UserSave = tuple[list[int], list[str]]
+Dim = int
 Names = tuple[str, str]
 Steps = list[int]
 Turns = list[str]
@@ -51,8 +53,8 @@ COMMANDS = [
 MSG_GAME = {
     'step': 'Ход {}... ',
     'save': 'Игра сохранена!',
-    'draw': 'The game ended in a draw...',
-    'win': 'Congratulations winner - {} !!!',
+    'draw': 'НИЧЬЯ...',
+    'win': 'ПОЗДРАВЛЯЕМ ПОБЕДИТЕЛЯ - {} !!!',
     'busy': 'Клетка занята, повторите...',
     'error': 'Не корректный ввод, повторите...',
 }
@@ -61,8 +63,9 @@ MSG_GAME = {
 # Заголовки приложения.
 MSG_HEAD = {
     'title': 'TIC TAC TOE',
-    'version': 'version 0.0.3',
+    'version': 'version 0.0.4',
     'menu': '\nМЕНЮ: > ',
+    'user_save': 'Введите номер партии: > ',
     'not_save': 'СОХРАНЕННЫХ ПАРТИЙ НЕ НАЙДЕНО!',
     'player_change': 'СМЕНИТЬ ИГРОКА.',
     'table': 'ТАБЛИЦА РЕЗУЛЬТАТОВ.',
@@ -84,13 +87,18 @@ MSG_USER = {
     'token': '{} выберете чем будете играть: > ', 
 }
 
-
+# авторизованный пользователь (главный игрок)
+user_auth: str = None
+# второй игрок соперник
+opponent: str = None
 # база игроков
 players_db: Players = {}
 # база сохранений
 saves_db: Saves = {} 
 # игровая пара: имена
 players: Names = None
+# сохраненные игры авторизованного игрока
+user_save: UserSave = None
 # размер игрового поля
 size = 3
 # числовая последовательность от 1 до количества ячеек поля

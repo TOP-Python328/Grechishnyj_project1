@@ -6,6 +6,7 @@
 from itertools import compress
 import data
 import view
+import bot
 
 # ИСПОЛЬЗОВАТЬ: во время аннотаций множеств, как и для списков, мы указываем типы сразу для всех элементов
 # КОММЕНТАРИЙ: я бы перенёс всё же эту развёрнутую аннотацию в data, объявив там отдельную переменную, и использовав её здесь
@@ -101,22 +102,26 @@ def statistics(players: data.Players) -> data.Statistics:
     return table_stat
 
 # ИСПРАВИТЬ: перепишите эту функцию так, чтобы она в модуле data переопределяла все находящиеся там и связанные с размером поля переменные — и не вычисляйте эти переменные в каждой функции
-def configure() -> None:
-    """Функция запрашивает размер поля и переопределяет все связанные с ним переменные"""
+def dim() -> data.Dim:
+    """Функция запрашивает размер поля"""
     while True:
         size = input('Введите размер поля: ') 
         if size.isdigit(): 
             size = int(size)
             if 2 < size <= 20:
-                data.size = size
-                data.size_range = [i+1 for i in range(data.size**2)]
-                data.wins = fill_wins(data.size)
-                data.strout = view.template(data.size)
-                data.turns = [' ' for _ in range(data.size**2)]
-                data.dim_range = range(data.size)
-                return None
+                return size
             else:
-                print('Введен не допустимый размер.')
+                print('Введен не допустимый размер. Необходимо от 3 до 20.')
         else:
             print('Введено не число.')
+            
+def config_game(size: int) -> None:
+    """Функция переопределяет все настройки связанные с размером поля"""
+    data.size = size
+    data.size_range = [i+1 for i in range(data.size**2)]
+    data.dim_range = range(data.size)
+    data.wins = fill_wins(data.size)
+    data.strout = view.template(data.size)
+    data.start_matrices = bot.calc_sm_cross(), bot.calc_sm_zero()
+    return None
 

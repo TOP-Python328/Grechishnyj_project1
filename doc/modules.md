@@ -23,15 +23,13 @@
         bot
             random import choice
             data
-            matrix_st
-        matrix_st
-            data
         utils
             itertools import compres
             data
             view
         view
             shutil import get_terminal_size
+        help
 -->
     
 main (точка входа)
@@ -40,6 +38,5 @@ files (чтение запись данных файлов)
 user (получаем пользователя, авторизация)
 game (игровой процесс, обновление файлов)
 bot (виртуальный игрок - бот)
-matrix_st (начальные матрицы стратегий)
 view (вывод в консоль в форматированном виде)
 utils (дополнительные функции)
