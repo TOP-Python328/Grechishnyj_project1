@@ -43,7 +43,7 @@ def play(names: data.Names) -> tuple[str, ...]:
         else:
             step = input(' > ')
                 
-        if step in data.COMMANDS[1]:
+        if step in data.COMMANDS['сохранить текущую игру']:
             view.header(data.MSG_GAME['save'])
             return 'save', names, (data.steps, data.turns)
         else:

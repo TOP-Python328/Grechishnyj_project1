@@ -17,11 +17,16 @@ def start() -> None:
     """Функция авторизации пользователя и выбора режима игры."""
     view.header(data.MSG_HEAD['title'])
     view.print_right(data.MSG_HEAD['version'])
-    help.main_menu()
+    help.main_menu(data.COMMANDS)
     data.players_db = files.read_players()
     data.saves_db = files.read_saves()
     data.user_autn = user.auth(data.players_db)
     data.players = data.user_autn
+
+
+
+
+
 
     
 
@@ -32,7 +37,7 @@ def mainloop() -> None:
             command = input(data.MSG_HEAD['menu'])
         except:
             print(data.MSG_GAME['error'])
-        if command in data.COMMANDS[0]:
+        if command in data.COMMANDS['начать новую партию']:
             data.opponent = user.get_opponent(data.players_db)
             data.players = data.user_autn, data.opponent
             data.players = user.get_token(data.players)
@@ -45,7 +50,7 @@ def mainloop() -> None:
         # ИСПРАВИТЬ: ну вы чего, Павел — это же проверка одной переменной, 
         # в одну итерацию она не может принять несколько разных значений — 
         # а вы независимые друг от друга проверки устраиваете, стыдно
-        elif command in data.COMMANDS[2]:
+        elif command in data.COMMANDS['загрузить существующую партию']:
             data.user_save = user.get_save(data.user_autn, data.saves_db)
             if data.user_save:
                 data.players = data.user_save[0]
@@ -58,20 +63,20 @@ def mainloop() -> None:
                 files.update_all(data.players, game_result, data.saves_db, data.players_db)
             else:
                 view.header(data.MSG_HEAD['not_save'])
-        elif command in data.COMMANDS[3]:
+        elif command in data.COMMANDS['отобразить раздел помощи']:
             view.table(data.COMMANDS)
-        elif command in data.COMMANDS[4]:
+        elif command in data.COMMANDS['создать или переключиться на игрока']:
             data.players = None
             view.header(data.MSG_HEAD['player_change'])
             data.user_autn = user.auth(data.players_db)
             data.players = data.user_autn
-        elif command in data.COMMANDS[5]:
+        elif command in data.COMMANDS['отобразить таблицу результатов']:
             view.table(utils.statistics(data.players_db))
-        elif command in data.COMMANDS[6]:
+        elif command in data.COMMANDS['изменить размер поля']:
             view.header(data.MSG_HEAD['dim'])
             data.size = utils.dim()
             utils.config_game(data.size)
-        elif command in data.COMMANDS[7]:
+        elif command in data.COMMANDS['выйти']:
             break
         else:
             print(data.MSG_GAME['error'])

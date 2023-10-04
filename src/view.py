@@ -113,7 +113,7 @@ def print_play(template: str, chars: tuple, right: bool=False) -> None:
     else:
         print(f'\n{template.format(*chars)}')
 
-def header2(text: str, char_top: str = '-', char_bottom: str = '-') -> None:
+def print_box_(text: str, char_top: str = '-', char_bottom: str = '-') -> None:
     """Функция выводит в stdout форматированную строку сообщения в рамке по ширине CLI"""
     width = get_terminal_size().columns
     inside = width - 6
@@ -150,3 +150,7 @@ def header2(text: str, char_top: str = '-', char_bottom: str = '-') -> None:
     text_main += (empt_line + border_bottom) if border_bottom == '=' else border_bottom
     print(text_main, end="")
     return None
+    
+def print_box_(head: str, body: str, char_top: str = '-', char_bottom: str = '-') -> None:
+    """Функция"""
+    
