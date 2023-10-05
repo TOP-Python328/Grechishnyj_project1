@@ -42,11 +42,9 @@ def play(names: data.Names) -> tuple[str, ...]:
             step = bot.hard_mode(pointer)
         else:
             step = input(' > ')
-                
-        if step in data.COMMANDS['сохранить текущую игру']:
-            view.header(data.MSG_GAME['save'])
-            return 'save', names, (data.steps, data.turns)
-        else:
+            if step in data.COMMANDS['сохранить текущую игру']:
+                view.header(data.MSG_GAME['save'])
+                return 'save', names, (data.steps, data.turns)
             try:
                 step = int(step)
                 if step in data.steps:
@@ -55,9 +53,10 @@ def play(names: data.Names) -> tuple[str, ...]:
             except ValueError:
                 print(data.MSG_GAME['error'])
                 continue
-            utils.add_step(step, data.steps, data.size)
-            data.turns[step-1] = data.tokens[pointer]
-            data.empty[step] = data.tokens[pointer]
+        
+        utils.add_step(step, data.steps, data.size)
+        data.turns[step-1] = data.tokens[pointer]
+        data.empty[step] = data.tokens[pointer]
         # НИЧЬЯ
         if utils.is_draw(data.steps, data.wins):
             # УДАЛИТЬ: раз уж завели для всех выводов отдельный модуль — что действительно удобно — то и этот вывод тоже туда уберите

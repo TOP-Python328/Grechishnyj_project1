@@ -30,6 +30,8 @@
         view
             shutil import get_terminal_size
         help
+            data
+            view
 -->
     
 main (точка входа)

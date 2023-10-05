@@ -12,7 +12,6 @@ import view
 import help
 
 
-
 def start() -> None:
     """Функция авторизации пользователя и выбора режима игры."""
     view.header(data.MSG_HEAD['title'])

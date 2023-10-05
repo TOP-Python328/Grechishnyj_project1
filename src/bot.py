@@ -8,12 +8,10 @@ from random import choice
 import data
 
 
-
-
-
 def easy_mode() -> data.SquareIndex:
     """Возвращает номер случайной свободной клетки игрового поля."""
     data.steps_turns = dict(zip(data.steps, data.turns))
+    print('easy_mode')
     return choice(tuple(set(data.empty) - set(data.steps_turns)))
  
     
@@ -32,10 +30,10 @@ def hard_mode(pointer: int) -> data.SquareIndex:
         # data.debug_data |= {'result': ew}
     ew = vectorization(ew)
     if any(ew):
+        print('hard_mode')
         return index_of_rand_max(ew) + 1
     else:
         return easy_mode()
-  
 
 
 def weights_tokens(pointer: int) -> data.Matrix:
