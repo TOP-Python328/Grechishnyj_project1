@@ -1,7 +1,7 @@
 """
-Глобальные переменные, условные константы.
-Вспомогательный модуль.
+Вспомогательный модуль - глобальные переменные, условные константы.
 """
+
 from collections.abc import Sequence, Callable
 from numbers import Real
 from pathlib import Path

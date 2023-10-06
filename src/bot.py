@@ -11,7 +11,6 @@ import data
 def easy_mode() -> data.SquareIndex:
     """Возвращает номер случайной свободной клетки игрового поля."""
     data.steps_turns = dict(zip(data.steps, data.turns))
-    print('easy_mode')
     return choice(tuple(set(data.empty) - set(data.steps_turns)))
  
     
@@ -30,7 +29,6 @@ def hard_mode(pointer: int) -> data.SquareIndex:
         # data.debug_data |= {'result': ew}
     ew = vectorization(ew)
     if any(ew):
-        print('hard_mode')
         return index_of_rand_max(ew) + 1
     else:
         return easy_mode()
@@ -39,7 +37,9 @@ def hard_mode(pointer: int) -> data.SquareIndex:
 def weights_tokens(pointer: int) -> data.Matrix:
     """Конструирует и возвращает матрицу весов занятых ячеек игрового поля."""
     board = tuple((data.empty | data.steps_turns).values())
+    # print(board)
     board = matricization(board)
+    # print(board)
     tokensweights = [[0]*data.size for _ in data.dim_range]
     for i in data.dim_range:
         for j in data.dim_range:
@@ -47,6 +47,7 @@ def weights_tokens(pointer: int) -> data.Matrix:
                 tokensweights[i][j] = data.WEIGHT_OWN
             elif board[i][j] == data.tokens[pointer-1]:
                 tokensweights[i][j] = data.WEIGHT_FOE
+    # print(f'{tokensweights=}')
     return tokensweights
 
 
@@ -66,6 +67,7 @@ def weights_empty(tokensweights: data.Matrix) -> data.Matrix:
                     if not data.WEIGHTS <= set(seq):
                         emptyweights[i][j] += sum(seq)**2
                 emptyweights[i][j] = int(emptyweights[i][j])
+    # print(f'{emptyweights=} ')
     return emptyweights
 
 
@@ -139,6 +141,7 @@ def matrices_sum(
     for i in data.dim_range:
         for j in data.dim_range:
             result[i][j] = sum(m[i][j] for m in matrices)
+    # print(f'matrices_sum {result=}')
     return result
 
 

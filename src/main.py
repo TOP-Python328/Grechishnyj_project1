@@ -1,6 +1,5 @@
 """
-Точка входа.
-Модуль верхнего уровня.
+Точка входа - модуль верхнего уровня.
 """
 
 import data
@@ -38,7 +37,7 @@ def mainloop() -> None:
             data.players = user.get_token(data.players)
             data.steps = []
             data.turns = [' ' for _ in range(data.size**2)]
-            data.empty = {num: ' ' for num in data.size_range}
+            # data.empty = {num: ' ' for num in data.size_range}
             utils.config_game(data.size)
             game_result = game.play(data.players)
             files.update_all(data.players, game_result, data.saves_db, data.players_db)
@@ -53,7 +52,7 @@ def mainloop() -> None:
                 utils.config_game(data.size)
                 data.steps = data.user_save[1][0]
                 data.turns = data.user_save[1][1]
-                data.empty = dict(zip(data.size_range, data.turns))
+                # data.empty = dict(zip(data.size_range, data.turns))
                 game_result = game.play(data.players)
                 files.update_all(data.players, game_result, data.saves_db, data.players_db)
             else:

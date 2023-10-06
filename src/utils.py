@@ -1,6 +1,5 @@
 """
-Дополнительные функции.
-Вспомогательный модуль.
+Вспомогательный модуль - дополнительные функции.
 """
 
 from itertools import compress
@@ -114,6 +113,7 @@ def dim() -> data.Dim:
                 print('Введен не допустимый размер. Необходимо от 3 до 20.')
         else:
             print('Введено не число.')
+
             
 def config_game(size: int) -> None:
     """Функция переопределяет все настройки связанные с размером поля"""
@@ -122,6 +122,7 @@ def config_game(size: int) -> None:
     data.dim_range = range(data.size)
     data.wins = fill_wins(data.size)
     data.strout = view.template(data.size)
+    data.empty = {num: ' ' for num in data.size_range}
     data.start_matrices = bot.calc_sm_cross(), bot.calc_sm_zero()
     return None
 

@@ -1,6 +1,5 @@
 """
-Форматирование и вывод данных в консоль.
-Вспомогательный модуль.
+Вспомогательный модуль - форматирование и вывод данных в консоль.
 """ 
 
 from shutil import get_terminal_size
@@ -21,7 +20,7 @@ def template(size: int) -> str:
     
 
 def table(table_dt: list[tuple]) -> None:
-    """Функция печатает в консоли таблицу в рамке"""
+    """Функция выводит в консоль таблицу в рамке"""
     w_terminal = get_terminal_size().columns
     width = [
         max(len(str(obj)) for obj in column)
@@ -88,6 +87,7 @@ def print_right(text: str) -> None:
     for line in text:
         text_right += ' ' * (w_terminal - len(line)) + line
     print(text_right)
+
     
 def print_center(text: str) -> None:
     """Функция выводит в stdout текст выравнивая его по центу"""
@@ -113,48 +113,10 @@ def print_play(template: str, chars: tuple, right: bool=False) -> None:
     else:
         print(f'\n{template.format(*chars)}')
 
-def print_box_(text: str, char_top: str = '-', char_bottom: str = '-') -> None:
-    """Функция выводит в stdout форматированную строку сообщения в рамке по ширине CLI"""
-    width = get_terminal_size().columns
-    inside = width - 6
-
-    char_line = '='
-    char_spot = '#'
-    char_empt = ' ' 
-    border_top = char_spot + char_top * (width - 2) + char_spot
-    border_bottom = char_spot + char_bottom * (width - 2) + char_spot
-    empt_line = char_spot + char_empt * (width - 2) + char_spot
-    
-    
-    text_main = border_top + empt_line if char_top == '=' else border_top
-    start = 0
-    batch = inside
-    text_split = []
-    while batch < len(text):
-        text_split.append(text[start:batch])
-        start, batch = batch,  batch + inside
-    text_split.append(text[start:])
-    for text_part in text_split:
-        if len(text_part) < inside:
-            start_remains = int((inside - len(text_part)) / 2) + 2
-            end_remains = inside - start_remains - len(text_part) + 4
-        else:
-            start_remains = end_remains = 2
-        text_main += (
-            char_spot + 
-            char_empt * start_remains +
-            text_part +
-            char_empt * end_remains +
-            char_spot
-        )   
-    text_main += (empt_line + border_bottom) if border_bottom == '=' else border_bottom
-    print(text_main, end="")
-    return None
 
 # переделать
 def print_box(head: str, body: str, symbol: str = None) -> None:
-    """Функция печати правил игры"""
-    
+    """Функция выводит правила и пояснения по игре"""
     
     width = get_terminal_size().columns
     inside = width - 6
